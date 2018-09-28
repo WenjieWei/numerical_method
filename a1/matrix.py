@@ -62,28 +62,28 @@ class matrix(object):
         return cloned_matrix
 
     def print_matrix_property(self):
-        print("The entered matrix is:\n")
+        print("The matrix is:\n")
         for i in range(self.rows):
             for j in range(self.cols):
-                print("%d" % (self[i][j]), end=" ")
+                print("%f" % self[i][j], end=" ")
             print("\n")
 
-        print("The transpose of the entered matrix is:\n")
+        print("The transpose of the matrix is:\n")
         other = self.T
         for i in range(other.rows):
             for j in range(other.cols):
-                print("%d" % (other[i][j]), end=" ")
+                print("%f" % other[i][j], end=" ")
             print("\n")
 
-        if self.is_square():
-            print("The entered matrix is square.\n")
+        if not self.is_square():
+            print("The matrix is not a square matrix.\n")
         else:
-            print("The entered matrix is not square.\n")
+            print("The matrix is a square matrix.\n")
 
-        if self.is_symmetric():
-            print("The entered matrix is symmetric.\n")
+        if not self.is_symmetric():
+            print("The matrix is not symmetric.\n")
         else:
-            print("The entered matrix is not symmetric.\n")
+            print("The matrix is symmetric.\n")
 
     @property
     def vec(self):
