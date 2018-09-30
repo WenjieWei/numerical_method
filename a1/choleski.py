@@ -37,8 +37,7 @@ def choleski_decomposition(A, b):
             for k in range(-1, j):
                 temp_sum += L[i][k] * L[j][k]
             L[i][j] = (A[i][j] - temp_sum) / L[j][j]
-    L.print_matrix_property()
-    # Now L and L transpose are all obtained, we can move to forward elmination
+    # Now L and LT are all obtained, we can move to forward elimination
 
     y_vec = [[None for _ in range(1)] for _ in range(n)]
     y = matrix(y_vec, n, 1)
@@ -54,7 +53,7 @@ def choleski_decomposition(A, b):
     # y.print_matrix_property()
     # Now perform back substitution to find x.
 
-    x_vec = [[0 for _ in range(1)] for _ in range(n)]
+    x_vec = [[None for _ in range(1)] for _ in range(n)]
     x = matrix(x_vec, n, 1)
 
     for i in range(n - 1, -1, -1):
@@ -73,8 +72,9 @@ if __name__ == "__main__":
     # test matrix x = [12; 6; -5; 7]
     A = matrix(a_vec, 4, 4)
     b = matrix(b_vec, 4, 1)
-    # A.print_matrix_property()
+
     x = choleski_decomposition(A, b)
     x.print_matrix_property()
 
-    # matrix.print_matrix_property()
+    result = A.dot_product(x)
+    result.print_matrix_property()

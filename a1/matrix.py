@@ -35,15 +35,17 @@ class matrix(object):
         if self.cols != other.rows:
             raise ValueError("Incorrect dimension for vector multiplication.")
 
-        result = 0
+        result_vec = [[None for _ in range(other.cols)] for _ in range(self.rows)]
+        result = matrix(result_vec, self.rows, other.cols)
+
         for i in range(self.rows):
-            for j in range(self.cols):
-                result += (self.vec[i][j] * other.vec[j][i])
+            for j in range(other.cols):
+                temp_sum = 0
+                for k in range(other.rows):
+                    temp_sum += self[i][k] * other[k][j]
+                result[i][j] = temp_sum
 
         return result
-
-    def is_positive_definite(self):
-        pass
 
     def __getitem__(self, item_number):
         if isinstance(item_number, int):
