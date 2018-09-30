@@ -1,0 +1,13 @@
+This is the testing file.
+The circuit files are organized in the following way:
+
+<Numbering of the current circuit>
+B <number of branches>
+N <number of nodes>
+<B1>
+<B2>
+...
+<BB>
+
+The branches are organized as such:
+<Start node ID> <End node ID> <J> <R> <E>
