@@ -1,6 +1,8 @@
 from matrix import matrix
+from choleski import choleski_decomposition
+import os
 
 
-class linear_resistive_netowrk():
+class linearResistiveNetwork():
     def __init__(self):
         pass
