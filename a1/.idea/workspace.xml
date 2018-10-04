@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11b63959-6adb-447e-acd1-6bb7ffbdfd47" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/a1_report.pdf" afterPath="$PROJECT_DIR$/report/a1_report.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/a1_report.synctex.gz" afterPath="$PROJECT_DIR$/report/a1_report.synctex.gz" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/a1.iml" afterPath="$PROJECT_DIR$/.idea/a1.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/choleski.py" afterPath="$PROJECT_DIR$/choleski.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/circuits/circuit_org.txt" afterPath="$PROJECT_DIR$/circuits/circuit_org.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/linearNetwork.py" afterPath="$PROJECT_DIR$/linearNetwork.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matrix.py" afterPath="$PROJECT_DIR$/matrix.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/a1_report.aux" afterPath="$PROJECT_DIR$/report/a1_report.aux" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/a1_report.log" afterPath="$PROJECT_DIR$/report/a1_report.log" />
-    </list>
+    <list default="true" id="11b63959-6adb-447e-acd1-6bb7ffbdfd47" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
