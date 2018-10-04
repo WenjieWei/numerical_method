@@ -1,7 +1,7 @@
 import math
 
 
-class matrix(object):
+class Matrix(object):
     def __init__(self, vec, rows, cols):
         self._vec = vec
         self._rows = rows
@@ -28,7 +28,7 @@ class matrix(object):
             for y in range(self.rows):
                 vec_trans[x][y] = self.vec[y][x]
 
-        transposed_matrix = matrix(vec_trans, self.cols, self.rows)
+        transposed_matrix = Matrix(vec_trans, self.cols, self.rows)
         return transposed_matrix
 
     def dot_product(self, other):
@@ -36,7 +36,7 @@ class matrix(object):
             raise ValueError("Incorrect dimension for vector multiplication.")
 
         result_vec = [[None for _ in range(other.cols)] for _ in range(self.rows)]
-        result = matrix(result_vec, self.rows, other.cols)
+        result = Matrix(result_vec, self.rows, other.cols)
 
         for i in range(self.rows):
             for j in range(other.cols):
@@ -60,7 +60,7 @@ class matrix(object):
                 return self._vec[x][y]
 
     def clone(self):
-        cloned_matrix = matrix(self.vec, self.rows, self.cols)
+        cloned_matrix = Matrix(self.vec, self.rows, self.cols)
         return cloned_matrix
 
     def print_matrix(self):

@@ -1,6 +1,5 @@
-import os
 import math
-from matrix import matrix
+from matrix import Matrix
 
 
 def check_choleski(A, b, x):
@@ -46,7 +45,7 @@ def choleski_decomposition(A, b):
 
     n = A.rows
     sparse_matrix = [[0 for _ in range(n)] for _ in range(n)]
-    L = matrix(sparse_matrix, n, n)
+    L = Matrix(sparse_matrix, n, n)
 
     for j in range(n):
         if A[j][j] <= 0:
@@ -67,7 +66,7 @@ def choleski_decomposition(A, b):
     # Now L and LT are all obtained, we can move to forward elimination
 
     y_vec = [[None for _ in range(1)] for _ in range(n)]
-    y = matrix(y_vec, n, 1)
+    y = Matrix(y_vec, n, 1)
     for i in range(y.rows):
         temp_sum = 0
         if i > 0:
@@ -79,7 +78,7 @@ def choleski_decomposition(A, b):
 
     # Now perform back substitution to find x.
     x_vec = [[None for _ in range(1)] for _ in range(n)]
-    x = matrix(x_vec, n, 1)
+    x = Matrix(x_vec, n, 1)
 
     for i in range(n - 1, -1, -1):
         temp_sum = 0
@@ -89,8 +88,7 @@ def choleski_decomposition(A, b):
 
     return x
 
-
-
+"""
 if __name__ == "__main__":
     a_vec = [[15, -5, 0, -5], [-5, 12, -2, 0], [0, -2, 6, -2], [-5, 0, -2, 9]]
     b_vec = [[115], [22], [-51], [13]]
@@ -103,17 +101,4 @@ if __name__ == "__main__":
         print("Correct")
     else:
         print("Incorrect")
-
-    """
-    a_vec = [[2, -1, 0], [-1, 2, -1], [0, -1, 2]]
-    b_vec = [[115], [22], [-51]]
-
-    A = matrix(a_vec, 3, 3)
-    b = matrix(b_vec, 3, 1)
-
-    x = choleski_decomposition(A, b)
-    if check_choleski(A, b, x):
-        print("Correct")
-    else:
-        print("Incorrect")
-    """
+"""
