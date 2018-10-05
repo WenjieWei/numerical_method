@@ -30,14 +30,18 @@ class LinearResistiveNetwork(object):
         return self._rev_res_mat
 
     @property
+    def re_A(self):
+        return self._red_ind_mat
+
+    @property
     def A(self):
-        return self._red_ind_mat.dot_product(self.Y.dot_product(self._red_ind_mat.T))
+        return self.re_A.dot_product(self.Y.dot_product(self.re_A.T))
 
     @property
     def b(self):
         YE = self.Y.dot_product(self.E)
         J_YE = self.J.minus(YE)
-        result = self.A.dot_product(J_YE)
+        result = self.re_A.dot_product(J_YE)
         return result
 
 
@@ -49,7 +53,7 @@ def read_circuits():
 
     :return: a LinearResistiveNetwork object containing the key matrices for calculations.
     """
-    with open('tc_2.csv') as csv_file:
+    with open('tc_5.csv') as csv_file:
         # Use CSV reader to read from circuit files
         # row[0] = start node ID
         # row[1] = end node ID
