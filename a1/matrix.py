@@ -7,6 +7,9 @@ class Matrix(object):
         self._rows = rows
         self._cols = cols
 
+    def set_row(self, n_rows):
+        self._rows = n_rows
+
     def is_square(self):
         return self._rows == self._cols
 
@@ -31,9 +34,21 @@ class Matrix(object):
         transposed_matrix = Matrix(vec_trans, self.cols, self.rows)
         return transposed_matrix
 
+    def minus(self, other):
+        if self.cols != other.cols or self.rows != other.rows:
+            raise ValueError("Incorrect dimension for matrix subtraction.")
+
+        result_vec = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        result = Matrix(result_vec, self.rows, self.cols)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                result[i][j] = self[i][j] - other[i][j]
+
+        return result
+
     def dot_product(self, other):
         if self.cols != other.rows:
-            raise ValueError("Incorrect dimension for vector multiplication.")
+            raise ValueError("Incorrect dimension for matrix multiplication.")
 
         result_vec = [[None for _ in range(other.cols)] for _ in range(self.rows)]
         result = Matrix(result_vec, self.rows, other.cols)

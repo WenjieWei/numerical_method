@@ -1,13 +1,13 @@
 This is the testing file.
 The circuit files are organized in the following way:
 
-Name,<Numbering of the current circuit>,B,<# of branches>,N,<# of nodes>
+<Numbering of the current circuit>,B,<# of branches>,N,<# of nodes>
 
-<Branch ID>,<Start node ID>,<End node ID>,<J>,<R>,<E>
-<Branch ID>,<Start node ID>,<End node ID>,<J>,<R>,<E>
-<Branch ID>,<Start node ID>,<End node ID>,<J>,<R>,<E>
-<Branch ID>,<Start node ID>,<End node ID>,<J>,<R>,<E>
+<Start node ID>,<End node ID>,<J>,<R>,<E>
+<Start node ID>,<End node ID>,<J>,<R>,<E>
+<Start node ID>,<End node ID>,<J>,<R>,<E>
+<Start node ID>,<End node ID>,<J>,<R>,<E>
 ...
 
-Branch ID should be in range of [0, B-1],
+Branch numbering should be in range of [0, B-1],
 Node ID should be in range of [0, N-1].
