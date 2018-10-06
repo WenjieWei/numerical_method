@@ -52,7 +52,7 @@ def read_circuits():
 
     :return: a LinearResistiveNetwork object containing the key matrices for calculations.
     """
-    with open("/home/wenjie/f18/numerical_method/a1/circuits/tc_4.csv") as csv_file:
+    with open("test.csv") as csv_file:
         # Use CSV reader to read from circuit files
         # row[0] = start node ID
         # row[1] = end node ID

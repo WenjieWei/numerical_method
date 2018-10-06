@@ -58,8 +58,8 @@ def choleski_decomposition(A, b):
             raise ValueError("Operand under square root is not positive. Matrix is not positive definite, exiting.")
         L[j][j] = math.sqrt(A[j][j] - temp_sum)
 
-        temp_sum = 0
         for i in range(j + 1, n):
+            temp_sum = 0
             for k in range(-1, j):
                 temp_sum += L[i][k] * L[j][k]
             L[i][j] = (A[i][j] - temp_sum) / L[j][j]
@@ -88,17 +88,16 @@ def choleski_decomposition(A, b):
 
     return x
 
-"""
-if __name__ == "__main__":
-    a_vec = [[15, -5, 0, -5], [-5, 12, -2, 0], [0, -2, 6, -2], [-5, 0, -2, 9]]
-    b_vec = [[115], [22], [-51], [13]]
 
-    A = matrix(a_vec, 4, 4)
-    b = matrix(b_vec, 4, 1)
+if __name__ == "__main__":
+    a_vec = [[0.1167, -0.0667, 0, -0.05, 0], [-0.0667, 0.2333, -0.1, 0, 0], [0, -0.1, 0.2667, -0.1, 0], [-0.05, 0, -0.1, 0.2, -0.05], [0, 0, 0, -0.05, 0.1167]]
+    b_vec = [[0], [0.6667], [0], [0], [0]]
+
+    A = Matrix(a_vec, 5, 5)
+    b = Matrix(b_vec, 5, 1)
 
     x = choleski_decomposition(A, b)
     if check_choleski(A, b, x):
         print("Correct")
     else:
         print("Incorrect")
-"""
