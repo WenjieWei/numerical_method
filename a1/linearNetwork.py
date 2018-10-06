@@ -1,6 +1,6 @@
 from matrix import Matrix
 from choleski import choleski_decomposition
-import csv
+import csv, math, time
 
 
 class LinearResistiveNetwork(object):
@@ -44,7 +44,7 @@ class LinearResistiveNetwork(object):
         return result
 
 
-def read_circuits():
+def read_circuits(filename):
     """
     This is the method to read the circuit information that is contained in csv files in a directory.
     Upon success, the method will create the required calculation information such as J, E, vectors
@@ -52,7 +52,7 @@ def read_circuits():
 
     :return: a LinearResistiveNetwork object containing the key matrices for calculations.
     """
-    with open("test.csv") as csv_file:
+    with open(filename) as csv_file:
         # Use CSV reader to read from circuit files
         # row[0] = start node ID
         # row[1] = end node ID
@@ -98,7 +98,86 @@ def read_circuits():
         return linear_network
 
 
+def network_constructor(size):
+    """
+    This method generates a linear resistive network.
+    The size of the network is defined by the argument size, and it's an N*N square network.
+
+    This method generates a new input .csv file, for future uses.
+
+    :param size: a.k.a, N, the number of nodes in a row or in a column.
+    :return: No return value.
+    """
+    n_node = int(math.pow(size, 2))
+    n_branch = 2 * size * (size - 1) + 1
+    resistance = 1000
+    test_current = 10
+    res_branch = 1000
+
+    row_count = 0
+    node_id = 0
+
+    first_row = [str(size), 'B', str(n_branch), 'N', str(n_node)]
+    first_branch = [str(n_node - 1), '0', str(test_current), str(res_branch), '0']
+    general_branch = [None for _ in range(5)]
+
+    with open('res_mesh' + str(size) + '.csv', 'w', newline='') as csv_file:
+        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar = ' ')
+
+        if row_count == 0:
+            row_writer.writerow(r for r in first_row)
+            row_writer.writerow(r for r in first_branch)
+            row_count += 2
+
+        for row_count in range(row_count, n_branch):
+            if node_id == n_node - 1:
+                break
+
+            elif (node_id + 1) % size == 0:
+                general_branch[0] = str(node_id)
+                general_branch[1] = str(node_id + size)
+                general_branch[2] = '0'
+                general_branch[3] = str(resistance)
+                general_branch[4] = '0'
+                row_writer.writerow(r for r in general_branch)
+
+            elif (node_id + size) >= n_node:
+                general_branch[0] = str(node_id)
+                general_branch[1] = str(node_id + 1)
+                general_branch[2] = '0'
+                general_branch[3] = str(resistance)
+                general_branch[4] = '0'
+                row_writer.writerow(r for r in general_branch)
+
+            else:
+                general_branch[0] = str(node_id)
+                general_branch[1] = str(node_id + 1)
+                general_branch[2] = '0'
+                general_branch[3] = str(resistance)
+                general_branch[4] = '0'
+                row_writer.writerow(r for r in general_branch)
+
+                general_branch[0] = str(node_id)
+                general_branch[1] = str(node_id + size)
+                general_branch[2] = '0'
+                general_branch[3] = str(resistance)
+                general_branch[4] = '0'
+                row_writer.writerow(r for r in general_branch)
+            node_id += 1
+
+
 if __name__ == "__main__":
-    network = read_circuits()
+    size = 15
+    #network_constructor(size)
+    start_time = time.time()
+
+    network = read_circuits('res_mesh'+str(size)+'.csv')
     x = network.solve_circuit()
     x.print_matrix()
+
+    v = x[x.rows - 1][0]
+    i1 = v / 1000
+    i2 = 10 - i1
+    resistance = v / i2
+    print("Computation time = " + str(time.time() - start_time))
+    print("Resistance of Mesh = " + str(resistance) + " Omega")
