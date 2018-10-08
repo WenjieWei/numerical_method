@@ -1,10 +1,10 @@
 from matrix import Matrix
-from choleski import choleski_decomposition
-import csv, math, time
+from choleski import solve_chol
+import csv, math, time, os
 
 
 class LinearResistiveNetwork(object):
-    def __init__(self, num, branch, node, a, y, j, e):
+    def __init__(self, num, branch, node, a, y, j, e, size):
         self._num = num
         self._branch_number = branch
         self._node_number = node
@@ -12,9 +12,17 @@ class LinearResistiveNetwork(object):
         self._volt_vec = e
         self._red_ind_mat = a
         self._rev_res_mat = y
+        self._size = size
+
+    def solve_circuit_banded(self):
+        return solve_chol(self.A, self.b, self.size + 1)
 
     def solve_circuit(self):
-        return choleski_decomposition(self.A, self.b)
+        return solve_chol(self.A, self.b)
+
+    @property
+    def size(self):
+        return self._size
 
     @property
     def J(self):
@@ -64,6 +72,7 @@ def read_circuits(filename):
         circuit_id = int(row[0])
         n_branch = int(row[2])
         n_node = int(row[4])
+        size = int(math.sqrt(n_node))
 
         branch_id = 0
         current_vec = [[0] for _ in range(n_branch)]
@@ -94,7 +103,7 @@ def read_circuits(filename):
         # and create new reduced incidence matrix
         a_mat = Matrix(a_mat.vec[1:], n_node - 1, n_branch)
 
-        linear_network = LinearResistiveNetwork(circuit_id, n_branch, n_node, a_mat, y_mat, j_vec, e_vec)
+        linear_network = LinearResistiveNetwork(circuit_id, n_branch, n_node, a_mat, y_mat, j_vec, e_vec, size)
         return linear_network
 
 
@@ -122,7 +131,7 @@ def network_constructor(size):
     general_branch = [None for _ in range(5)]
 
     with open('res_mesh' + str(size) + '.csv', 'w', newline='') as csv_file:
-        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar = ' ')
+        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
 
         if row_count == 0:
             row_writer.writerow(r for r in first_row)
@@ -167,17 +176,61 @@ def network_constructor(size):
 
 
 if __name__ == "__main__":
-    size = 15
-    #network_constructor(size)
-    start_time = time.time()
+    os.chdir('circuits')
+    with open('result.csv', 'w', newline='') as csv_file:
+        row_writer = csv.writer(csv_file, delimiter='\t', quoting=csv.QUOTE_NONE, escapechar=' ')
+        first_row = ['size', '', 'Resistance', 'Time of Calculation']
+        row_writer.writerow(r for r in first_row)
+        for size in range(2, 16):
+            print("Writing result of N = " + str(size) + ", banded = False")
+            start_time_unbanded = time.time()
 
-    network = read_circuits('res_mesh'+str(size)+'.csv')
-    x = network.solve_circuit()
-    x.print_matrix()
+            network = read_circuits('res_mesh' + str(size) + '.csv')
+            x_unbanded = network.solve_circuit()
 
-    v = x[x.rows - 1][0]
+            v = x_unbanded[x_unbanded.rows - 1][0]
+            i1 = v / 1000
+            i2 = 10 - i1
+            resistance = v / i2
+            finish_time_unbanded = time.time()
+            result_arr = [str(size), 'unbanded', str(resistance), str(finish_time_unbanded - start_time_unbanded)]
+            row_writer.writerow(r for r in result_arr)
+
+            print("Writing result of N = " + str(size) + ", banded = True")
+            start_time_banded = time.time()
+            x_banded = network.solve_circuit_banded()
+
+            v = x_banded[x_banded.rows - 1][0]
+            i1 = v / 1000
+            i2 = 10 - i1
+            banded_resistance = v / i2
+            finish_time_banded = time.time()
+            result_arr = [str(size), 'banded', str(resistance), str(finish_time_banded - start_time_banded)]
+            row_writer.writerow(r for r in result_arr)
+    """
+    size = 12
+    print("N="+str(size))
+    start_time_unbanded = time.time()
+
+    network = read_circuits('res_mesh' + str(size) + '.csv')
+    x_unbanded = network.solve_circuit()
+
+    v = x_unbanded[x_unbanded.rows - 1][0]
     i1 = v / 1000
     i2 = 10 - i1
     resistance = v / i2
-    print("Computation time = " + str(time.time() - start_time))
-    print("Resistance of Mesh = " + str(resistance) + " Omega")
+    finish_time_unbanded = time.time()
+    print("R=" +str(resistance))
+    print("t=" +str(finish_time_unbanded - start_time_unbanded))
+
+    start_time_banded = time.time()
+    x_banded = network.solve_circuit_banded()
+
+    v = x_banded[x_banded.rows - 1][0]
+    i1 = v / 1000
+    i2 = 10 - i1
+    banded_resistance = v / i2
+    finish_time_banded = time.time()
+    print("R=" +str(resistance))
+    print("t=" +str(finish_time_banded - start_time_banded))
+"""
