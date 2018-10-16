@@ -194,12 +194,11 @@ def backward_substitution(L, y, half_bandwidth=None):
 
 
 if __name__ == "__main__":
-    a_vec = [[0.1167, -0.0667, 0, -0.05, 0], [-0.0667, 0.2333, -0.1, 0, 0], [0, -0.1, 0.2667, -0.1, 0],
-             [-0.05, 0, -0.1, 0.2, -0.05], [0, 0, 0, -0.05, 0.1167]]
-    b_vec = [[0], [0.6667], [0], [0], [0]]
+    a_vec = [[6, 15, 55], [15, 55, 225], [55, 225, 979]]
+    b_vec = [[0], [0.6667], [0]]
 
-    A = Matrix(a_vec, 5, 5)
-    b = Matrix(b_vec, 5, 1)
+    A = Matrix(a_vec, 3, 3)
+    b = Matrix(b_vec, 3, 1)
 
     x = solve_chol(A, b)
     if check_choleski(A, b, x):
