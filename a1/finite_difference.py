@@ -178,8 +178,8 @@ def successive_over_relaxation(mesh, omega, uni_spacing=True):
             mesh = new_mesh.copy_mesh()
             new_mesh = mesh.copy_mesh()
             iteration += 1
-            for i in range(mesh.width_nodes):
-                for j in range(mesh.height_nodes):
+            for i in range(mesh.height_nodes):
+                for j in range(mesh.width_nodes):
                     if mesh.matrix[i][j].is_free:
                         sum = (new_mesh.matrix[i - 1][j].value +
                                new_mesh.matrix[i][j - 1].value +
@@ -190,32 +190,41 @@ def successive_over_relaxation(mesh, omega, uni_spacing=True):
                         overwrite = (1 - omega) * temp_val + omega * sum * 0.25
                         new_mesh.matrix[i][j].set_value(overwrite)
 
-                    # Deal with symmetry on y
-                    if i == (mesh.matrix.rows - 3):
-                        new_node = new_mesh.matrix[i + 2][j]
-                        old_node = mesh.matrix[i][j]
-                        new_node.set_value(old_node.value)
-                        if not old_node.is_free:
-                            new_node.set_fixed()
+                        if i == mesh.matrix.rows - 2:
+                            new_mesh.matrix[i + 1][j].set_value(new_mesh.matrix[i - 1][j].value)
 
-                    # Deal with symmetry on x
-                    if j == (mesh.matrix.rows - 3):
-                        new_node = new_mesh.matrix[i][j + 2]
-                        old_node = mesh.matrix[i][j]
-                        new_node.set_value(old_node.value)
-                        if not old_node.is_free:
-                            new_node.set_fixed()
-
-                    # Deal with symmetry on the corner
-                    if j == (mesh.matrix.rows - 3) and i == (mesh.matrix.rows - 3):
-                        new_node = new_mesh.matrix[i + 2][j + 2]
-                        old_node = mesh.matrix[i][j]
-                        new_node.set_value(old_node.value)
-                        if not old_node.is_free:
-                            new_node.set_fixed()
-
+                        elif j == mesh.matrix.cols - 2:
+                            new_mesh.matrix[i][j + 1].set_value(new_mesh.matrix[i][j - 1].value)
     else:
         pass
+
+    return iteration, mesh
+
+def jacobi(mesh, omega):
+    iteration = 0
+    new_mesh = mesh.copy_mesh()
+
+    while not relaxation_succeeded(mesh, new_mesh):
+        mesh = new_mesh.copy_mesh()
+        new_mesh = mesh.copy_mesh()
+        iteration += 1
+
+        for i in range(mesh.height_nodes):
+            for j in range(mesh.width_nodes):
+                if mesh.matrix[i][j].is_free:
+                    sum = (mesh.matrix[i - 1][j].value +
+                           mesh.matrix[i][j - 1].value +
+                           mesh.matrix[i + 1][j].value +
+                           mesh.matrix[i][j + 1].value)
+                    overwrite = sum / 4
+                    new_mesh.matrix[i][j].set_value(overwrite)
+
+                    # deal with symmetry
+                    if i == mesh.matrix.rows - 2:
+                        new_mesh.matrix[i + 1][j].set_value(new_mesh.matrix[i - 1][j].value)
+
+                    elif j == mesh.matrix.cols - 2:
+                        new_mesh.matrix[i][j + 1].set_value(new_mesh.matrix[i][j - 1].value)
 
     return iteration, mesh
 
@@ -233,31 +242,97 @@ def relaxation_succeeded(mesh, new_mesh):
     return True
 
 if __name__ == "__main__":
-    h = 0.02
-    print("Now performing FD on a uniform spacing mesh with h = " + str(h))
-    rect = UniformMesh(0.1, 0.1, 0, 0.1, h)
-    rect.initialize_values_second_quadrant()
-
     omega_list = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
+    h_list = [0.02, 0.01, 0.005, 0.0025, 0.00125]
     list_iteration = [0 for _ in range(10)]
 
-    first_row = ['omega', 'value', 'iterations']
     row = [0 for _ in range(3)]
 
-    with open('w_result.csv', 'w', newline='') as csv_file:
+    question = 4
+
+    if question == 2:
+        file_name = 'w '
+    elif question == 3:
+        file_name = 'h'
+    else:
+        file_name = 'h_jacobi'
+    #iter, result = successive_over_relaxation(rect, 1.3)
+    #result.print_mesh()
+
+    with open(file_name + '_result.csv', 'w', newline='') as csv_file:
+        first_row = ['omega', 'value', 'iterations']
         row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
         row_writer.writerow(r for r in first_row)
 
-        for i in range(10):
-            omega = omega_list[i]
-            iteration, result = successive_over_relaxation(rect, omega)
-            list_iteration[i] = iteration
-            print("Number of iterations with omega = " + str(omega) + " is " + str(iteration))
+        if question == 2:
+            for i in range(10):
+                rect = UniformMesh(0.1, 0.1, 0, 0.1, 0.02)
+                omega = omega_list[i]
+                iteration, result = successive_over_relaxation(rect, omega)
+                list_iteration[i] = iteration
+                print("Number of iterations with omega = " + str(omega) + " is " + str(iteration))
 
-            target_node = result.matrix[3][2]
+                #0.06, 0.04 with h = 0.02
+                target_node = result.matrix[2][3]
 
-            row[0] = omega
-            row[1] = target_node.value
-            row[2] = iteration
+                row[0] = omega
+                row[1] = target_node.value
+                row[2] = iteration
 
-            row_writer.writerow(r for r in row)
+                row_writer.writerow(r for r in row)
+        elif question == 3:
+            first_row = ['h', 'value', 'iterations']
+            for i in range(5):
+                omega = 1.3
+                h = h_list[i]
+                print("Now performing FD on a uniform spacing mesh using SOR with h = " + str(h))
+                rect = UniformMesh(0.1, 0.1, 0, 0.1, h)
+                rect.initialize_values_second_quadrant()
+
+                iteration, result = successive_over_relaxation(rect, omega)
+                list_iteration[i] = iteration
+                print("Number of iterations with h = " + str(h) + " is " + str(iteration))
+                if h == 0.02:
+                    target_node = result.matrix[2][3]
+                elif h == 0.01:
+                    target_node = result.matrix[4][6]
+                elif h == 0.005:
+                    target_node = result.matrix[8][12]
+                elif h == 0.0025:
+                    target_node = result.matrix[16][24]
+                else:
+                    target_node = result.matrix[32][48]
+
+                row[0] = h
+                row[1] = target_node.value
+                row[2] = iteration
+
+                row_writer.writerow(r for r in row)
+        elif question == 4:
+            first_row = ['h', 'value', 'iterations']
+            for i in range(5):
+                omega = 1.3
+                h = h_list[i]
+                print("Now performing FD on a uniform spacing mesh using Jacobi with h = " + str(h))
+                rect = UniformMesh(0.1, 0.1, 0, 0.1, h)
+                rect.initialize_values_second_quadrant()
+
+                iteration, result = jacobi(rect, omega)
+                list_iteration[i] = iteration
+                print("Number of iterations with h = " + str(h) + " is " + str(iteration))
+                if h == 0.02:
+                    target_node = result.matrix[2][3]
+                elif h == 0.01:
+                    target_node = result.matrix[4][6]
+                elif h == 0.005:
+                    target_node = result.matrix[8][12]
+                elif h == 0.0025:
+                    target_node = result.matrix[16][24]
+                else:
+                    target_node = result.matrix[32][48]
+
+                row[0] = h
+                row[1] = target_node.value
+                row[2] = iteration
+
+                row_writer.writerow(r for r in row)

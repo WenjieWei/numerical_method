@@ -2,6 +2,9 @@ from matrix import Matrix
 from choleski import solve_chol
 import csv, math, time, os
 
+resistance = 10000
+TEST_CURRENT = 10
+TEST_BRANCH_RESISTANCE = 10000
 
 class LinearResistiveNetwork(object):
     def __init__(self, num, branch, node, a, y, j, e, size):
@@ -119,15 +122,12 @@ def network_constructor(size):
     """
     n_node = int(math.pow(size, 2))
     n_branch = 2 * size * (size - 1) + 1
-    resistance = 1000
-    test_current = 10
-    res_branch = 1000
 
     row_count = 0
     node_id = 0
 
     first_row = [str(size), 'B', str(n_branch), 'N', str(n_node)]
-    first_branch = [str(n_node - 1), '0', str(test_current), str(res_branch), '0']
+    first_branch = [str(n_node - 1), '0', str(TEST_CURRENT), str(TEST_BRANCH_RESISTANCE), '0']
     general_branch = [None for _ in range(5)]
 
     with open('res_mesh' + str(size) + '.csv', 'w', newline='') as csv_file:
@@ -177,8 +177,15 @@ def network_constructor(size):
 
 if __name__ == "__main__":
     os.chdir('circuits')
+    """
+    for size in range(2, 16):
+        print("Constructing resistor mesh, n = " + str(size))
+        network_constructor(size)
+        print("Done.")
+    """
+
     with open('result.csv', 'w', newline='') as csv_file:
-        row_writer = csv.writer(csv_file, delimiter='\t', quoting=csv.QUOTE_NONE, escapechar=' ')
+        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
         first_row = ['size', '', 'Resistance', 'Time of Calculation']
         row_writer.writerow(r for r in first_row)
         for size in range(2, 16):
@@ -189,10 +196,12 @@ if __name__ == "__main__":
             x_unbanded = network.solve_circuit()
 
             v = x_unbanded[x_unbanded.rows - 1][0]
-            i1 = v / 1000
-            i2 = 10 - i1
+            i1 = v / TEST_BRANCH_RESISTANCE
+            i2 = TEST_CURRENT - i1
             resistance = v / i2
             finish_time_unbanded = time.time()
+            print("Resistance = " + str(resistance) + ", calculation time = "
+                  + str(finish_time_unbanded - start_time_unbanded))
             result_arr = [str(size), 'unbanded', str(resistance), str(finish_time_unbanded - start_time_unbanded)]
             row_writer.writerow(r for r in result_arr)
 
@@ -205,32 +214,7 @@ if __name__ == "__main__":
             i2 = 10 - i1
             banded_resistance = v / i2
             finish_time_banded = time.time()
+            print("Resistance = " + str(resistance) + ", calculation time = "
+                  + str(finish_time_banded - start_time_banded))
             result_arr = [str(size), 'banded', str(resistance), str(finish_time_banded - start_time_banded)]
             row_writer.writerow(r for r in result_arr)
-    """
-    size = 12
-    print("N="+str(size))
-    start_time_unbanded = time.time()
-
-    network = read_circuits('res_mesh' + str(size) + '.csv')
-    x_unbanded = network.solve_circuit()
-
-    v = x_unbanded[x_unbanded.rows - 1][0]
-    i1 = v / 1000
-    i2 = 10 - i1
-    resistance = v / i2
-    finish_time_unbanded = time.time()
-    print("R=" +str(resistance))
-    print("t=" +str(finish_time_unbanded - start_time_unbanded))
-
-    start_time_banded = time.time()
-    x_banded = network.solve_circuit_banded()
-
-    v = x_banded[x_banded.rows - 1][0]
-    i1 = v / 1000
-    i2 = 10 - i1
-    banded_resistance = v / i2
-    finish_time_banded = time.time()
-    print("R=" +str(resistance))
-    print("t=" +str(finish_time_banded - start_time_banded))
-"""
