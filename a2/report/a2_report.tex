@@ -1,0 +1,257 @@
+\documentclass[a4paper,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{indentfirst}
+\usepackage[per-mode=symbol]{siunitx}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage[format=plain,font=it]{caption}
+\usepackage{subcaption}
+\usepackage{standalone}
+\usepackage[nottoc]{tocbibind}
+\usepackage[noabbrev,capitalize,nameinlink]{cleveref}
+\usepackage{listings}
+\usepackage{xspace}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{titlesec}
+\usepackage[cache=false]{minted}
+\usepackage{booktabs}
+\usepackage{csvsimple}
+\newcommand{\MATLAB}{\textsc{Matlab}\xspace}
+\usepackage{siunitx}
+\usepackage[super]{nth}
+\usepackage[titletoc]{appendix}
+
+% Custom commands
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\setminted{linenos,breaklines,fontsize=auto}
+
+%\titleformat*{\section}{\normalsize\bfseries}
+%\titleformat*{\subsection}{\small\bfseries}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\providecommand*{\listingautorefname}{Listing}
+\newcommand*{\Appendixautorefname}{Appendix}
+
+%opening
+\title{\textbf{ECSE 543: Numerical Methods} \\ Assignment 2 Report}
+\author{Wenjie Wei \\ 260685967}
+\date{\today}
+
+\begin{document}
+	\sloppy
+	\maketitle
+	
+	\tableofcontents
+	\newpage
+	
+	\section*{Introduction}
+		In this assignment, three numerical methods discussed in class were explored. The interpreter used for the Python codes is Python 3.6. 
+		
+	\section{First Order Finite Difference Problem}
+		Figure \ref{prob} shows an illustration of the first order triangular finite element problem to be solved. 
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{prob}
+			\caption{1st Order Triangular FE Problem}
+			\label{prob}
+		\end{figure}
+	
+		Take the triangle with nodes 1, 2, and 3 as the beginning step. Firstly, interpolate the potential \textit{U} as:
+		$$
+			U = a + bx + cy
+		$$
+		and at vertex 1, we can write an equation of potential as:
+		$$
+			U_1 = a + bx_1 + cy_1
+		$$
+		
+		Thus, we can have a vector of potentials for vertex 1, 2, and 3 as follows:
+		$$
+			\begin{bmatrix}
+				U_1 \\ U_2 \\ U_3
+			\end{bmatrix} = 
+			\begin{bmatrix}
+				1 & x_1 & y_1 \\
+				1 & x_2 & y_2 \\
+				1 & x_3 & y_3 
+			\end{bmatrix}
+			\begin{bmatrix}
+				a \\ b \\ c
+			\end{bmatrix}
+		$$
+		and the terms $a, b, c$ are acquired following:
+		\begin{equation}
+			U = \sum_{i = 1}^{3} U_i\alpha_i(x, y)
+		\end{equation}
+		and we can derive a general formula for $\alpha_i$:
+		\begin{equation}
+			\nabla \alpha_i = \nabla \frac{1}{2A}[(x_{i+1}y_{i+2}-x_{i+2}y_{i+1}) + (y_{i+1}-y_{i+2})x+(x_{i+2}-x_{i+1})y]			
+		\end{equation}
+		where $A$ holds the value of the area of the triangle.
+		
+		Following Equation 2, when the index $i$ exceeds the top limit 3, it is wrapped around to 1. Now we can get the following calculations for $\alpha_1$, $\alpha_2$ and $\alpha_3$:
+		$$
+			\nabla \alpha_1 = \nabla \frac{1}{2A}[(x_2y_3-x_3y_2) + (y_2-y_3)x+(x_3-x_2)y]
+		$$
+		$$
+			\nabla \alpha_2 = \nabla \frac{1}{2A}[(x_3y_1-x_1y_3) + (y_3-y_1)x+(x_1-x_3)y]
+		$$
+		$$
+			\nabla \alpha_3 = \nabla \frac{1}{2A}[(x_1y_2-x_2y_1) + (y_1-y_2)x+(x_2-x_1)y]
+		$$
+		
+		With the expressions for $\alpha$ derived, we now go ahead and calculate the \textbf{$S_{ij}^{(e)}$} matrices. The general formula below is used to calculate the \textbf{\textit{S}} matrix:
+		\begin{equation}
+			S^{(e)}_{ij} = \int_{\Delta e} \nabla \alpha_i \nabla \alpha_j dS
+		\end{equation}
+		
+		Using the equation above, plug in the values provided in Figure \ref{prob}, we can have the following calculations:
+		$$
+			S_{11} = \frac{1}{4A}[(y_2 - y_3)^2 + (x_3 - x_2)^2] = \frac{1}{4 \times 2 \times 10^{-4}}[0 + 0.02^2] = 0.5
+		$$
+		$$
+			S_{12} = \frac{1}{4A}[(y_2 - y_3)(y_3 - y_1) + (x_3 - x_2)(x_1 - x_3)] = -0.5
+		$$
+		$$
+			S_{13} = \frac{1}{4A}[(y_2 - y_3)(y_1 - y_2) + (x_3 - x_2)(x_2 - x_1)] = 0
+		$$
+		
+		Before performing the calculation for the next row, we inspect the calculation rules of the entries of the \textbf{\textit{S}} matrix, we can easily discover that $S_{ij} = S_{ji}$, since the flip of the orders of the operands in the parenthesis results in the same sign of the result. Therefore, the following statements can be made:
+		$$
+			S_{21} = S_{12} = -0.5
+		$$
+		$$
+			S_{31} = S_{13} = 0
+		$$
+		
+		$$
+			S_{22} = \frac{1}{4A}[(y_3 - y_1)^2 + (x_1 - x_3)^2] = 1
+		$$
+		$$
+			S_{23} = S_{32} = \frac{1}{4A}[(y_3 - y_1)(y_1 - y_2) + (x_1 - x_3)(x_2 - x_1)] = -0.5
+		$$
+		$$
+			S_{33} = \frac{1}{4A}[(y_1 - y_2)^2 + (x_2 - x_1)^2] = 0.5
+		$$
+		
+		From the calculation results above, we can come up with the \textbf{\textit{S}} matrix for vertices 1, 2, and 3:
+		$$
+			S^{(1)} = \begin{bmatrix}
+				S_{11} & S_{12} & S_{13}\\
+				S_{21} & S_{22} & S_{23} \\
+				S_{31} & S_{32} & S_{33} \\
+			\end{bmatrix} = 
+			\begin{bmatrix}
+				0.5 & -0.5 & 0\\
+				-0.5 & 1 & -0.5 \\
+				0 & -0.5 & 0.5
+			\end{bmatrix}
+		$$
+		
+		Use the similar approach for the other triangle and obtain $S_{456}$:
+		$$
+			S^{(2)} = \begin{bmatrix}
+				S_{44} & S_{45} & S_{46}\\
+				S_{54} & S_{55} & S_{56} \\
+				S_{64} & S_{65} & S_{66} \\
+			\end{bmatrix} = 
+			\begin{bmatrix}
+				1 & -0.5 & -0.5\\
+				-0.5 & 0.5 & 0 \\
+				-0.5 & 0 & 0.5
+			\end{bmatrix}
+		$$
+		
+		Add the triangles to get the energy of the whole system shown in (b) of Figure \ref{prob}:
+		$$
+			\begin{bmatrix}
+				U_1 \\
+				U_2 \\
+				U_3 \\
+				U_4 \\
+				U_5 \\
+				U_6				
+			\end{bmatrix}_{dis} = 
+			\begin{bmatrix}
+				1&&&\\
+				&1&&\\
+				&&1&\\
+				&&&1\\
+				1&&&\\
+				&&1&
+			\end{bmatrix}
+			\begin{bmatrix}
+				U_1 \\
+				U_2 \\
+				U_3 \\
+				U_4
+			\end{bmatrix}_{joint}
+		$$
+		which is also denoted as:
+		$$
+			U_{dis} = CU_{con}
+		$$
+		
+		Use $\textbf{S}_{dis}$ to denote a $6\times 6$ matrix to represent the disjoint matrix:
+		$$
+			S_{dis} = 
+			\begin{bmatrix}
+				S^{(1)} & \\
+				 & S^{(2)}				
+			\end{bmatrix} = 
+			\begin{bmatrix}
+				0.5 & -0.5 & 0 & & & \\
+				-0.5 & 1 & -0.5 & & & \\
+				0 & -0.5 & 0.5 & & & \\
+				& & & 1 & -0.5 & -0.5 \\
+				& & & -0.5 & 0.5 & 0 \\
+				& & & -0.5 & 0 & 0.5
+			\end{bmatrix}
+		$$
+		
+		Now the global \textbf{\textit{S}} matrix will be calculated as:
+		\begin{align*}
+			S_{con} &= C^TS_{dis}C \\
+			&= 
+			\begin{bmatrix}
+				1&&&&1&\\
+				&1&&&&\\
+				&&1&&&1\\
+				&&&1&&
+			\end{bmatrix}
+			\begin{bmatrix}
+				0.5 & -0.5 & 0 & & & \\
+				-0.5 & 1 & -0.5 & & & \\
+				0 & -0.5 & 0.5 & & & \\
+				& & & 1 & -0.5 & -0.5 \\
+				& & & -0.5 & 0.5 & 0 \\
+				& & & -0.5 & 0 & 0.5
+			\end{bmatrix}
+			\begin{bmatrix}
+				1&&&\\
+				&1&&\\
+				&&1&\\
+				&&&1\\
+				1&&&\\
+				&&1&
+			\end{bmatrix}\\
+			&= \begin{bmatrix}
+				1 & -0.5 & 0 & -0.5\\
+				-0.5 & 1 & -0.5 & 0\\
+				0 & -0.5 & 1 & -0.5\\
+				-0.5 & 0 & -0.5 & 1
+			\end{bmatrix}
+		\end{align*}
+		which is the final result of this problem.
+	\section{Coaxial Cable Electrostatic Problem}
+		Use the mesh constructed in Figure \ref{prob}, we construct a finite element mesh for a quarter of the coaxial cable. 
+\end{document}
