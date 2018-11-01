@@ -15,20 +15,32 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="finite_element.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="finite_element.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/finite_element.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="704">
-              <caret line="151" column="20" lean-forward="false" selection-start-line="151" selection-start-column="20" selection-end-line="151" selection-end-column="20" />
+            <state relative-caret-position="297">
+              <caret line="145" column="22" lean-forward="false" selection-start-line="145" selection-start-column="22" selection-end-line="145" selection-end-column="22" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
-                <element signature="e#171#3900#0" expanded="false" />
-                <element signature="e#985#1576#0" expanded="false" />
-                <element signature="e#1645#2069#0" expanded="false" />
-                <element signature="e#2138#2503#0" expanded="false" />
-                <element signature="e#2572#2996#0" expanded="false" />
-                <element signature="e#3039#3461#0" expanded="false" />
-                <element signature="e#3488#3555#0" expanded="false" />
+                <element signature="e#180#4404#0" expanded="false" />
+                <element signature="e#1144#1735#0" expanded="false" />
+                <element signature="e#1804#2228#0" expanded="false" />
+                <element signature="e#2297#2662#0" expanded="false" />
+                <element signature="e#2731#3155#0" expanded="false" />
+                <element signature="e#3198#3620#0" expanded="false" />
+                <element signature="e#3647#3714#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="conjugate_gradient.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/conjugate_gradient.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="108">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#34#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -38,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/matrix.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="378">
-              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -47,8 +59,8 @@
       <file leaf-file-name="finite_difference.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/finite_difference.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1207">
-              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="378">
+              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
@@ -65,11 +77,17 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>f_bound</find>
+    </findStrings>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/laplace.py" />
         <option value="$PROJECT_DIR$/finite_element.py" />
+        <option value="$PROJECT_DIR$/conjugate_gradient.py" />
       </list>
     </option>
   </component>
@@ -94,7 +112,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -110,6 +127,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="RunManager" selected="Python.finite_element">
@@ -307,18 +325,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13800539" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30115426" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30115426" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39979014" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36411333" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -336,13 +354,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/finite_element.py</url>
-          <line>141</line>
-          <option name="timeStamp" value="2" />
+          <line>169</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="3" />
+      <option name="time" value="6" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="fe_matrix._rows" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/finite_element.py">
@@ -351,59 +373,13 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#171#3900#0" expanded="false" />
-            <element signature="e#985#1576#0" expanded="false" />
-            <element signature="e#1645#2069#0" expanded="false" />
-            <element signature="e#2138#2503#0" expanded="false" />
-            <element signature="e#2572#2996#0" expanded="false" />
-            <element signature="e#3039#3461#0" expanded="false" />
-            <element signature="e#3488#3555#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/finite_element.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#171#3900#0" expanded="false" />
-            <element signature="e#985#1576#0" expanded="false" />
-            <element signature="e#1645#2069#0" expanded="false" />
-            <element signature="e#2138#2503#0" expanded="false" />
-            <element signature="e#2572#2996#0" expanded="false" />
-            <element signature="e#3039#3461#0" expanded="false" />
-            <element signature="e#3488#3555#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/finite_element.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#171#3900#0" expanded="false" />
-            <element signature="e#985#1576#0" expanded="false" />
-            <element signature="e#1645#2069#0" expanded="false" />
-            <element signature="e#2138#2503#0" expanded="false" />
-            <element signature="e#2572#2996#0" expanded="false" />
-            <element signature="e#3039#3461#0" expanded="false" />
-            <element signature="e#3488#3555#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/laplace.py" />
-    <entry file="file://$PROJECT_DIR$/laplace.py" />
-    <entry file="file://$PROJECT_DIR$/finite_difference.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1207">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#180#4404#0" expanded="false" />
+            <element signature="e#1144#1735#0" expanded="false" />
+            <element signature="e#1804#2228#0" expanded="false" />
+            <element signature="e#2297#2662#0" expanded="false" />
+            <element signature="e#2731#3155#0" expanded="false" />
+            <element signature="e#3198#3620#0" expanded="false" />
+            <element signature="e#3647#3714#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -416,19 +392,110 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/finite_difference.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/finite_element.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="151" column="20" lean-forward="false" selection-start-line="151" selection-start-column="20" selection-end-line="151" selection-end-column="20" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#171#3900#0" expanded="false" />
-            <element signature="e#985#1576#0" expanded="false" />
-            <element signature="e#1645#2069#0" expanded="false" />
-            <element signature="e#2138#2503#0" expanded="false" />
-            <element signature="e#2572#2996#0" expanded="false" />
-            <element signature="e#3039#3461#0" expanded="false" />
-            <element signature="e#3488#3555#0" expanded="false" />
+            <element signature="e#180#4404#0" expanded="false" />
+            <element signature="e#1144#1735#0" expanded="false" />
+            <element signature="e#1804#2228#0" expanded="false" />
+            <element signature="e#2297#2662#0" expanded="false" />
+            <element signature="e#2731#3155#0" expanded="false" />
+            <element signature="e#3198#3620#0" expanded="false" />
+            <element signature="e#3647#3714#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/finite_element.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#180#4404#0" expanded="false" />
+            <element signature="e#1144#1735#0" expanded="false" />
+            <element signature="e#1804#2228#0" expanded="false" />
+            <element signature="e#2297#2662#0" expanded="false" />
+            <element signature="e#2731#3155#0" expanded="false" />
+            <element signature="e#3198#3620#0" expanded="false" />
+            <element signature="e#3647#3714#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/finite_element.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#180#4404#0" expanded="false" />
+            <element signature="e#1144#1735#0" expanded="false" />
+            <element signature="e#1804#2228#0" expanded="false" />
+            <element signature="e#2297#2662#0" expanded="false" />
+            <element signature="e#2731#3155#0" expanded="false" />
+            <element signature="e#3198#3620#0" expanded="false" />
+            <element signature="e#3647#3714#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/laplace.py" />
+    <entry file="file://$PROJECT_DIR$/laplace.py" />
+    <entry file="file://$PROJECT_DIR$/matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/finite_difference.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/finite_element.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="145" column="22" lean-forward="false" selection-start-line="145" selection-start-column="22" selection-end-line="145" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#180#4404#0" expanded="false" />
+            <element signature="e#1144#1735#0" expanded="false" />
+            <element signature="e#1804#2228#0" expanded="false" />
+            <element signature="e#2297#2662#0" expanded="false" />
+            <element signature="e#2731#3155#0" expanded="false" />
+            <element signature="e#3198#3620#0" expanded="false" />
+            <element signature="e#3647#3714#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conjugate_gradient.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
           </folding>
         </state>
       </provider>

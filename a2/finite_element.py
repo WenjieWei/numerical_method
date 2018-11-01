@@ -4,11 +4,11 @@ from finite_difference import Node
 HIGH_VOLTAGE = 110
 LOW_VOLTAGE = 0
 SPACING = 0.02
-f = open('file.dat', 'w')
+f = open('SIMPLE2Dinput.dat', 'w')
 
 
 class two_element(object):
-    def __init__(self, x, y):
+    def __init__(self, x, y, bl_node):
         """
         This is the constructor of a two-triangle finite element
         the vertices are numbered from 0 to 5, replacing 1 - 6 in question 1
@@ -24,6 +24,11 @@ class two_element(object):
         self._vertex_array[4] = self._vertex_array[0]
         self._bl_x = x
         self._bl_y = y
+
+        self._bl_node = bl_node
+        self._tl_node = bl_node + 6
+        self._br_node = bl_node + 1
+        self._tr_node = bl_node + 7
 
         if (self._bl_x + SPACING) > 0.1 or (self._bl_y + SPACING) > 0.1:
             raise ValueError("The finite elements cannot exceed the third quadrant!")
@@ -118,37 +123,128 @@ class two_element(object):
     def bl_y(self):
         return self._bl_y
 
+    @property
+    def bl_node(self):
+        return self._bl_node
+
+    @property
+    def tl_node(self):
+        return self._tl_node
+
+    @property
+    def br_node(self):
+        return self._br_node
+
+    @property
+    def tr_node(self):
+        return self._tr_node
+
+    @property
+    def vertex(self, i):
+        return self._vertex_array[i]
+
 if __name__ == "__main__":
     fe_vec = [[None for _ in range(5)] for _ in range(5)]
     fe_matrix = Matrix(fe_vec, 5, 5)
 
-    y_coord = 0.08
+    y_coord = 0
     count = 0
 
     print("Creating the mesh of the finite elements...")
-    for i in range(5):
+    node_count = 1
+    for i in range(4, -1, -1):
         x_coord = 0
         for j in range(5):
             if x_coord >= 0.06 and y_coord == 0.08:
                 break
             else:
-                temp_two_element = two_element(x_coord, y_coord)
+                temp_two_element = two_element(x_coord, y_coord, node_count)
                 fe_matrix[i][j] = temp_two_element
+                node_count += 1
                 count += 1
 
             x_coord += SPACING
-        y_coord -= SPACING
+        node_count += 1
+        y_coord += SPACING
 
     print("Finite elements created: " + str(count * 2))
 
-    node_count = 1
-    x_coord = 0
-    y_coord = 0
+    # Now write the input file for SIMPLE2D.m
+    print("Writing node information...")
+    # write the bottom row
+    i = 4
+    for j in range(5):
+        temp_two_element = fe_matrix[i][j]
+        f.write('%d %.3f %.3f\n' % (temp_two_element.bl_node, temp_two_element.bl_x, temp_two_element.bl_y))
+        if j == 4:
+            f.write('%d %.3f %.3f\n' % (temp_two_element.br_node,
+                                        temp_two_element.bl_x + SPACING, temp_two_element.bl_y))
+
+    # write the general rows
     for i in range(4, -1, -1):
         for j in range(5):
             temp_two_element = fe_matrix[i][j]
-
             if temp_two_element is not None:
-                pass
+                if i != 0 and j != 4:
+                    f.write('%d %.3f %.3f\n' %
+                                  (temp_two_element.tl_node, temp_two_element.bl_x, temp_two_element.bl_y + SPACING))
+                elif i != 0 and j == 4:
+                    f.write('%d %.3f %.3f\n' %
+                                  (temp_two_element.tl_node, temp_two_element.bl_x, temp_two_element.bl_y + SPACING))
+                    f.write('%d %.3f %.3f\n' %
+                                  (temp_two_element.tr_node, temp_two_element.bl_x + SPACING,
+                                   temp_two_element.bl_y + SPACING))
+                else:
+                    if j != 2:
+                        f.write('%d %.3f %.3f\n' %
+                                  (temp_two_element.tl_node, temp_two_element.bl_x, temp_two_element.bl_y + SPACING))
+                    else:
+                        f.write('%d %.3f %.3f\n' %
+                                      (temp_two_element.tl_node,
+                                       temp_two_element.bl_x, temp_two_element.bl_y + SPACING))
+                        f.write('%d %.3f %.3f\n' %
+                                      (temp_two_element.tr_node, temp_two_element.bl_x + SPACING,
+                                       temp_two_element.bl_y + SPACING))
+            else:
+                break
+
+    f.write('\n')
+    # Now write the triangle connection
+    print("Writing triangle information...")
+    for i in range(4, -1, -1):
+        for j in range(5):
+            temp_two_element = fe_matrix[i][j]
+            if temp_two_element is not None:
+                f.write('%d %d %d %.3f\n' %
+                    (temp_two_element.bl_node, temp_two_element.br_node, temp_two_element.tl_node, 0))
+            else:
+                break
+        for j in range(5):
+            temp_two_element = fe_matrix[i][j]
+            if temp_two_element is not None:
+                f.write('%d %d %d %.3f\n' %
+                    (temp_two_element.tr_node, temp_two_element.tl_node, temp_two_element.br_node, 0))
+            else:
+                break
+
+    f.write('\n')
+
+    print("Writing boundary conditions")
+    for i in range(4, -1, -1):
+        for j in range(5):
+            temp_two_element = fe_matrix[i][j]
+            if temp_two_element is not None:
+                if i == 4 and j != 4:
+                    f.write('%d %.3f\n' % (temp_two_element.bl_node, LOW_VOLTAGE))
+                elif i == 4 and j == 4:
+                    f.write('%d %.3f\n' % (temp_two_element.bl_node, LOW_VOLTAGE))
+                    f.write('%d %.3f\n' % (temp_two_element.br_node, LOW_VOLTAGE))
+                elif i == 3 and j == 0:
+                    f.write('%d %.3f\n' % (temp_two_element.bl_node, LOW_VOLTAGE))
+                    f.write('%d %.3f\n' % (temp_two_element.tl_node, LOW_VOLTAGE))
+                elif j == 0 and i != 3 and i != 4:
+                    f.write('%d %.3f\n' % (temp_two_element.tl_node, LOW_VOLTAGE))
+                elif j >= 2 and i <= 1:
+                    f.write('%d %.3f\n' % (temp_two_element.tr_node, HIGH_VOLTAGE))
             else:
                 break
