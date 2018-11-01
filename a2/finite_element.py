@@ -1,156 +1,154 @@
 from matrix import Matrix
-import csv
+from finite_difference import Node
 
-
-LOW_VOLTAGE = 0
 HIGH_VOLTAGE = 110
-TOTAL_WIDTH = 0.2
-TOTAL_HEIGHT = 0.2
-
-class Node(object):
-    def __init__(self, x, y, value):
-        self._x = x
-        self._y = y
-        self._value = value
-        self._is_free = True
-
-    def set_free(self):
-        self._is_free = True
-
-    def set_fixed(self):
-        self._is_free = False
-
-    def set_x(self, x):
-        self._x = x
-
-    def set_y(self, y):
-        self._y = y
-
-    def set_value(self, value):
-        self._value = value
-
-    @property
-    def x(self):
-        return self._x
-
-    @property
-    def y(self):
-        return self._y
-
-    @property
-    def value(self):
-        return self._value
-
-    @property
-    def is_free(self):
-        return self._is_free
+LOW_VOLTAGE = 0
+SPACING = 0.02
+f = open('file.dat', 'w')
 
 
-class TriangleGroup(object):
-    def __init__(self, tl_x, tl_y, spacing):
-        self._node_list = [None for _ in range(6)]
-        self._tl_x = tl_x
-        self._tl_y = tl_y
-        self._spacing = spacing
+class two_element(object):
+    def __init__(self, x, y):
+        """
+        This is the constructor of a two-triangle finite element
+        the vertices are numbered from 0 to 5, replacing 1 - 6 in question 1
 
-    def construct_group(self):
-        spacing = self._spacing
-        temp_node = Node(self._tl_x, self._tl_y, 0)
-        if self._tl_x == 0:
-            # Set vertex 0
-            temp_node.set_fixed()
-            self._node_list[0] = temp_node
+        :param x: x coord for the bottom-left corner
+        :param y: y coord for the bottom-left corner
+        """
 
-            # Set vertex 1
-            temp_node.set_x(self._tl_x + spacing)
-            if self._tl_y != 0:
-                temp_node.set_free()
+        # vertices are put in the array
+        # vertices 2&5, vertices 0&4 have the same properties
+        self._vertex_array = [Node(0) for _ in range(6)]
+        self._vertex_array[5] = self._vertex_array[2]
+        self._vertex_array[4] = self._vertex_array[0]
+        self._bl_x = x
+        self._bl_y = y
+
+        if (self._bl_x + SPACING) > 0.1 or (self._bl_y + SPACING) > 0.1:
+            raise ValueError("The finite elements cannot exceed the third quadrant!")
+
+        if self._bl_y == 0:
+            # configure node 1
+            self._vertex_array[1].set_fixed()
+            self._vertex_array[1].set_value(LOW_VOLTAGE)
+
+            # configure node 2 and 5
+            self._vertex_array[2].set_fixed()
+            self._vertex_array[2].set_value(LOW_VOLTAGE)
+
+            # configure node 3
+            self._vertex_array[3].set_free()
+
+            if self._bl_x == 0:
+                # configure node 0 and 4
+                self._vertex_array[0].set_fixed()
+                self._vertex_array[0].set_value(LOW_VOLTAGE)
             else:
-                temp_node.set_fixed()
-            self._node_list[1] = temp_node
+                self._vertex_array[0].set_free()
+        elif self._bl_x >= 0.06 and self._bl_y == 0.06:
+            # configure node 1
+            self._vertex_array[1].set_free()
 
-            # Set vertex 2
-            temp_node.set_free()
-            temp_node.set_y(self._tl_y + spacing)
-            self._node_list[2] = temp_node
+            # configure node 2 and 5
+            self._vertex_array[2].set_free()
 
-            # Set vertex 3
-            temp_node.set_fixed()
-            temp_node.set_x(self._tl_x)
-            self._node_list[3] = temp_node
+            # configure node 0 and 4
+            self._vertex_array[0].set_fixed()
+            self._vertex_array[0].set_value(HIGH_VOLTAGE)
 
-            # Set vertices 4 and 5
-            self._node_list[4] = self._node_list[0]
-            self._node_list[5] = self._node_list[2]
+            # configure node 3
+            self._vertex_array[3].set_fixed()
+            self._vertex_array[3].set_value(HIGH_VOLTAGE)
+        elif self._bl_x == 0.04 and self._bl_y == 0.06:
+            # configure node 1
+            self._vertex_array[1].set_free()
 
-        elif (self._tl_x + spacing) == 0.08:
-            # Set vertex 0
-            temp_node.set_free()
-            temp_node.set_value(0)
-            self._node_list[0] = temp_node
+            # configure node 2 and 5
+            self._vertex_array[2].set_free()
 
-            # Set vertex 1
-            temp_node.set_x(self._tl_x + spacing)
-            if self._tl_y == 0:
-                temp_node.set_fixed()
-                self._node_list[1] = temp_node
-            elif self._tl_y >= 0.06:
-                temp_node.set_fixed()
-                temp_node.set_value(HIGH_VOLTAGE)
-                self._node_list[1] = temp_node
-            else:
-                temp_node.set_free()
-                self._node_list[1] = temp_node
+            # configure node 0 and 4
+            self._vertex_array[0].set_free()
 
-            # Set vertex 2
-            temp_node.set_y(self._tl_y + spacing)
-            if self._tl_y == 0:
-                temp_node.set_free()
-                self._node_list[2] = temp_node
-            elif self._tl_y >= 0.04:
-                temp_node.set_fixed()
-                temp_node.set_value(HIGH_VOLTAGE)
-                self._node_list[2] = temp_node
-            else:
-                temp_node.set_free()
-                self._node_list[2] = temp_node
+            # configure node 3
+            self._vertex_array[3].set_fixed()
+            self._vertex_array[3].set_value(HIGH_VOLTAGE)
+        elif self._bl_x == 0.04 and self._bl_y == 0.08:
+            # configure node 1
+            self._vertex_array[1].set_free()
 
-            # Set vertex 3
-            temp_node.set_x(self._tl_x)
-            temp_node.set_free()
-            temp_node.set_value(0)
-            self._node_list[3] = temp_node
+            # configure node 2 and 5
+            self._vertex_array[2].set_fixed()
+            self._vertex_array[2].set_value(HIGH_VOLTAGE)
 
-            # Set vertex 4 and 5
-            self._node_list[4] = self._node_list[0]
-            self._node_list[5] = self._node_list[2]
+            # configure node 0 and 4
+            self._vertex_array[0].set_free()
 
+            # configure node 3
+            self._vertex_array[3].set_fixed()
+            self._vertex_array[3].set_value(HIGH_VOLTAGE)
+        elif self._bl_x == 0:
+            # configure node 1
+            self._vertex_array[1].set_fixed()
+            self._vertex_array[1].set_value(LOW_VOLTAGE)
 
-class TwoElementMesh(object):
-    def __init__(self, spacing, quarter, width, height):
-        self._spacing = spacing
-        self._quarter = quarter
-        self._width = width / 2
-        self._height = height / 2
+            # configure node 0 and 4
+            self._vertex_array[0].set_fixed()
+            self._vertex_array[0].set_value(LOW_VOLTAGE)
 
-    def construct_mesh(self):
-        spacing = self._spacing
+            # configure node 3
+            self._vertex_array[3].set_free()
 
-        if self._quarter == 2:
-            # if width % spacing != 0 or height % spacing != 0:
-            #    raise ValueError("Width or height must be divisible by spacing.")
+            # configure node 2 and 5
+            self._vertex_array[2].set_free()
+        else:
+            for i in range(6):
+                self._vertex_array[i].set_free()
 
-            num_tri_group_row = self._width / spacing
-            num_tri_group_col = self._height / spacing
+    def print_two_element(self):
+        for i in range(6):
+            print("Vertex " + str(i) + " has value " + str(self._vertex_array[i].value) + ", free node: "
+                  + str(self._vertex_array[i].is_free))
 
-    def print_mesh(self):
-        pass
+    @property
+    def bl_x(self):
+        return self._bl_x
 
-    def write_input_to_csv(self):
-        pass
+    @property
+    def bl_y(self):
+        return self._bl_y
 
 if __name__ == "__main__":
-    spacing = 0.02
-    quarter = 2
+    fe_vec = [[None for _ in range(5)] for _ in range(5)]
+    fe_matrix = Matrix(fe_vec, 5, 5)
 
-    mesh = TwoElementMesh(spacing, quarter)
+    y_coord = 0.08
+    count = 0
+
+    print("Creating the mesh of the finite elements...")
+    for i in range(5):
+        x_coord = 0
+        for j in range(5):
+            if x_coord >= 0.06 and y_coord == 0.08:
+                break
+            else:
+                temp_two_element = two_element(x_coord, y_coord)
+                fe_matrix[i][j] = temp_two_element
+                count += 1
+
+            x_coord += SPACING
+        y_coord -= SPACING
+
+    print("Finite elements created: " + str(count * 2))
+
+    node_count = 1
+    x_coord = 0
+    y_coord = 0
+    for i in range(4, -1, -1):
+        for j in range(5):
+            temp_two_element = fe_matrix[i][j]
+
+            if temp_two_element is not None:
+                pass
+            else:
+                break
