@@ -33,6 +33,8 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
+\tikzstyle{my help lines}=[gray,thick,dashed]
+
 \setminted{linenos,breaklines,fontsize=auto}
 
 %\titleformat*{\section}{\normalsize\bfseries}
@@ -253,5 +255,88 @@
 		\end{align*}
 		which is the final result of this problem.
 	\section{Coaxial Cable Electrostatic Problem}
-		Use the mesh constructed in Figure \ref{prob}, we construct a finite element mesh for a quarter of the coaxial cable. 
+		Use the triangular finite element model for the analysis of the coaxial cable problem seen in the previous assignment. We take the third quadrant for the analysis. 
+		\subsection{The Finite Element Mesh}
+			Listing \ref{lst:finite_element} shows the implementation of the construction of the finite element mesh and the creation of the \MATLAB input file.
+			\begin{figure}[!h]
+				\centering
+				\begin{tikzpicture}[scale=2]
+					\draw (0, 0) grid (5, 4);
+					\draw (0,1) -- (1,0);
+					\draw (0,2) -- (2,0);
+					\draw (0,3) -- (3,0);
+					\draw (0,4) -- (4,0);
+					\draw (0,4) grid (3,5);
+					\draw (0,5) -- (5,0);
+					\draw (1,5) -- (5,1);
+					\draw (2,5) -- (5,2);
+					\draw (4,4) -- (5,3);
+					\draw [fill=gray] (3,4) rectangle (5,5);					
+					\node at (4, 4.5) {$110V$};
+					\node[above right] at (0,0) {$1$};
+					\node[above right] at (1,0) {$2$};
+					\node[above right] at (2,0) {$3$};
+					\node[above right] at (3,0) {$4$};
+					\node[above right] at (4,0) {$5$};
+					\node[above right] at (5,0) {$6$};
+					\node[above right] at (0,1) {$7$};
+					\node[above right] at (1,1) {$8$};
+					\node[above right] at (2,1) {$9$};
+					\node[above right] at (3,1) {$10$};
+					\node[above right] at (4,1) {$11$};
+					\node[above right] at (5,1) {$12$};
+					\node[above right] at (0,2) {$13$};
+					\node[above right] at (1,2) {$14$};
+					\node[above right] at (2,2) {$15$};
+					\node[fill=blue,above right] at (3,2) {$16$};
+					
+					\node[above right] at (4,2) {$17$};
+					\node[above right] at (5,2) {$18$};
+					\node[above right] at (0,3) {$19$};
+					\node[above right] at (1,3) {$20$};
+					\node[above right] at (2,3) {$21$};
+					\node[above right] at (3,3) {$22$};
+					\node[above right] at (4,3) {$23$};
+					\node[above right] at (5,3) {$24$};
+					\node[above right] at (0,4) {$25$};
+					\node[above right] at (1,4) {$26$};
+					\node[above right] at (2,4) {$27$};
+					\node[below left] at (3,4) {$28$};
+					\node[below left] at (4,4) {$29$};
+					\node[below left] at (5,4) {$30$};
+					\node[above right] at (0,5) {$31$};
+					\node[above right] at (1,5) {$32$};
+					\node[above right] at (2,5) {$33$};
+					\node[above right] at (3,5) {$34$};
+				\end{tikzpicture}
+				\caption{Organization of the Finite Element Mesh}
+				\label{fe_mesh_fig}
+			\end{figure}
+		
+			Figure \ref{fe_mesh_fig} shows the organization of the finite element mesh constructed by the program. The input file written by this program is shown in Listing \ref{lst:SIMPLE2D.dat}. Note that the first number at the beginning of the lines are not an input to the \MATLAB file, as it is the line number which is provided by the \textit{minted} package in \LaTeX. 
+			
+		\subsection{Potential Solved by SIMPLE2D.M}
+			Use the input file generated in the previous section, we are able 
+			
+	\newpage
+	\begin{appendices}
+		
+		\section{Code Listings} \label{appendix:code}
+		
+		\setminted{linenos,breaklines,fontsize=\footnotesize}
+		
+		\begin{center}
+			\captionof{listing}{Finite Element Mesh Implementation (\texttt{finite\_element.py}).}
+			\inputminted{python}{../finite_element.py}
+			\label{lst:finite_element}
+		\end{center}
+		
+		\begin{center}
+			\captionof{listing}{Finite Element Mesh Input File}
+			\inputminted{python}{../SIMPLE2Dinput.dat}
+			\label{lst:SIMPLE2D.dat}
+		\end{center}
+		
+	\end{appendices}
+	
 \end{document}
