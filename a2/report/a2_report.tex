@@ -58,7 +58,7 @@
 	\section*{Introduction}
 		In this assignment, three numerical methods discussed in class were explored. The interpreter used for the Python codes is Python 3.6. 
 		
-	\section{First Order Finite Difference Problem}
+	\section{First Order Finite Element Problem}
 		Figure \ref{prob} shows an illustration of the first order triangular finite element problem to be solved. 
 		\begin{figure}[!h]
 			\centering
@@ -200,7 +200,7 @@
 		$$
 		which is also denoted as:
 		$$
-			U_{dis} = CU_{con}
+			U_{dis} = CU_{joint}
 		$$
 		
 		Use $\textbf{S}_{dis}$ to denote a $6\times 6$ matrix to represent the disjoint matrix:
@@ -222,7 +222,7 @@
 		
 		Now the global \textbf{\textit{S}} matrix will be calculated as:
 		\begin{align*}
-			S_{con} &= C^TS_{dis}C \\
+			S_{joint} &= C^TS_{dis}C \\
 			&= 
 			\begin{bmatrix}
 				1&&&&1&\\
@@ -260,7 +260,7 @@
 			Listing \ref{lst:finite_element} shows the implementation of the construction of the finite element mesh and the creation of the \MATLAB input file.
 			\begin{figure}[!h]
 				\centering
-				\begin{tikzpicture}[scale=2]
+				\begin{tikzpicture}[scale=1.4]
 					\draw (0, 0) grid (5, 4);
 					\draw (0,1) -- (1,0);
 					\draw (0,2) -- (2,0);
@@ -315,8 +315,20 @@
 		
 			Figure \ref{fe_mesh_fig} shows the organization of the finite element mesh constructed by the program. The input file written by this program is shown in Listing \ref{lst:SIMPLE2D.dat}. Note that the first number at the beginning of the lines are not an input to the \MATLAB file, as it is the line number which is provided by the \textit{minted} package in \LaTeX. 
 			
-		\subsection{Potential Solved by SIMPLE2D.M}
-			Use the input file generated in the previous section, we are able 
+		\subsection{Potential Solved by SIMPLE2D.m}
+			Use the input file generated in the previous section, we are able to use the \MATLAB file to calculate the potential at every node we have specified. The output of the SIMPLE2D.m file is shown in Listing \ref{lst:potential.dat}. The target node (0.06, 0.04) is highlighted in blue as Node 16, and from Listing \ref{lst:potential.dat} shows that the potential at this node is $40.527V$.
+			
+		\subsection{Capacitance per Unit Length}
+			To compute the capacitance, apply the fundamental Equation \ref{capacitance}: 
+			\begin{equation}
+				E = \frac{1}{2} CV^2
+				\label{capacitance}
+			\end{equation}
+			
+			Now apply the finite element method used in the previous section. Use $U_{joint}$ to denote the potential vector shown in Listing \ref{lst:potential.dat}. Use the $S_{joint}$ calculated in the first question, we derive an equation to calculate the total capacitance:
+			\begin{equation}
+				E = \frac{1}{2}\varepsilon_0 U^T_{joint}S_{joint}U{joint}
+			\end{equation}
 			
 	\newpage
 	\begin{appendices}
@@ -331,11 +343,20 @@
 			\label{lst:finite_element}
 		\end{center}
 		
+		\newpage
+		\twocolumn
 		\begin{center}
 			\captionof{listing}{Finite Element Mesh Input File}
 			\inputminted{python}{../SIMPLE2Dinput.dat}
 			\label{lst:SIMPLE2D.dat}
 		\end{center}
+	
+		\begin{center}
+			\captionof{listing}{\MATLAB File Outputs}
+			\inputminted{python}{../potentials.dat}
+			\label{lst:potential.dat}
+		\end{center}
+		\newpage
 		
 	\end{appendices}
 	
