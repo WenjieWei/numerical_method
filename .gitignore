@@ -491,6 +491,11 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+# ignore directory
+./a1/.idea
+./a1/__pycache__
+./a2/.idea
+
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 >>>>>>> 72277adb0d060d53461c12e12df964bd0fcb513f
