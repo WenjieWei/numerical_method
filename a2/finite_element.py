@@ -1,8 +1,9 @@
 from matrix import Matrix
 from finite_difference import Node
+import math
 
 EPSILON = 8.854188e-12
-HIGH_VOLTAGE = 110
+HIGH_VOLTAGE = 15
 LOW_VOLTAGE = 0
 SPACING = 0.02
 s_vec = [[1, -0.5, 0, -0.5],[-0.5, 1, -0.5, 0],[0, -0.5, 1, -0.5],[-0.5, 0, -0.5, 1]]
@@ -181,7 +182,7 @@ def calc_energy(fe_matrix):
                 U[2][0] = float(potentials[temp_two_element.id + 6])
                 U[3][0] = float(potentials[temp_two_element.id + 7])
 
-                energy += 0.5 * EPSILON * U.T.dot_product(S).dot_product(U)[0][0]
+                energy += 0.5 * EPSILON * U.T.dot_product(S.dot_product(U))[0][0]
 
     return energy
 
@@ -201,7 +202,7 @@ if __name__ == "__main__":
             if x_coord >= 0.06 and y_coord == 0.08:
                 break
             else:
-                temp_two_element = two_element(x_coord, y_coord, node_count, node_count)
+                temp_two_element = two_element(x_coord, y_coord, node_count + 1, node_count)
                 fe_matrix[i][j] = temp_two_element
                 node_count += 1
                 count += 1
@@ -292,5 +293,7 @@ if __name__ == "__main__":
             else:
                 break
 
-    energy = calc_energy(fe_matrix)
+    energy = 4 * calc_energy(fe_matrix)
+    capacitance = 2 * energy / math.pow(HIGH_VOLTAGE, 2)
     print(energy)
+    print(capacitance)
