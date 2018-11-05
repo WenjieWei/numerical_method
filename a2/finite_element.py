@@ -1,9 +1,8 @@
 from matrix import Matrix
 from finite_difference import Node
-import math
 
 EPSILON = 8.854188e-12
-HIGH_VOLTAGE = 15
+HIGH_VOLTAGE = 110
 LOW_VOLTAGE = 0
 SPACING = 0.02
 s_vec = [[1, -0.5, 0, -0.5],[-0.5, 1, -0.5, 0],[0, -0.5, 1, -0.5],[-0.5, 0, -0.5, 1]]
@@ -177,39 +176,37 @@ def calc_energy(fe_matrix):
                 u_vec = [[0] for _ in range(4)]
                 U = Matrix(u_vec, 4, 1)
 
-                U[0][0] = float(potentials[temp_two_element.id])
-                U[1][0] = float(potentials[temp_two_element.id + 1])
-                U[2][0] = float(potentials[temp_two_element.id + 6])
-                U[3][0] = float(potentials[temp_two_element.id + 7])
+                U[0][0] = float(potentials[temp_two_element.bl_node - 1])
+                U[1][0] = float(potentials[temp_two_element.bl_node])
+                U[2][0] = float(potentials[temp_two_element.bl_node + 5])
+                U[3][0] = float(potentials[temp_two_element.bl_node + 6])
 
                 energy += 0.5 * EPSILON * U.T.dot_product(S.dot_product(U))[0][0]
 
     return energy
 
 
-if __name__ == "__main__":
-    fe_vec = [[None for _ in range(5)] for _ in range(5)]
-    fe_matrix = Matrix(fe_vec, 5, 5)
-
+def write_mesh(fe_matrix):
     y_coord = 0
     count = 0
 
     print("Creating the mesh of the finite elements...")
     node_count = 0
+    row = 1
     for i in range(4, -1, -1):
         x_coord = 0
         for j in range(5):
             if x_coord >= 0.06 and y_coord == 0.08:
                 break
             else:
-                temp_two_element = two_element(x_coord, y_coord, node_count + 1, node_count)
+                temp_two_element =two_element(x_coord, y_coord, node_count + row, node_count)
                 fe_matrix[i][j] = temp_two_element
-                node_count += 1
                 count += 1
+                node_count += 1
 
             x_coord += SPACING
-        node_count += 1
         y_coord += SPACING
+        row += 1
 
     print("Finite elements created: " + str(count * 2))
 
@@ -293,7 +290,14 @@ if __name__ == "__main__":
             else:
                 break
 
+
+if __name__ == "__main__":
+    fe_vec = [[None for _ in range(5)] for _ in range(5)]
+    fe_matrix = Matrix(fe_vec, 5, 5)
+
+    write_mesh(fe_matrix)
+
     energy = 4 * calc_energy(fe_matrix)
-    capacitance = 2 * energy / math.pow(HIGH_VOLTAGE, 2)
+    capacitance = 2 * energy / (HIGH_VOLTAGE * HIGH_VOLTAGE)
     print(energy)
     print(capacitance)

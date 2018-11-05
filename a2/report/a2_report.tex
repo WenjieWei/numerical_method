@@ -327,10 +327,17 @@
 			
 			Now apply the finite element method used in the previous section. Use $U_{joint}$ to denote the potential vector shown in Listing \ref{lst:potential.dat}. Use the $S_{joint}$ calculated in the first question, we derive an equation to calculate the total capacitance:
 			\begin{equation}
-				E = \frac{1}{2}\varepsilon_0 U^T_{joint}S_{joint}U{joint}
+				W = \frac{1}{2}U^T_{joint}S_{joint}U_{joint}
+				\label{USU}
 			\end{equation}
 			
 			The value of the entries in the $U$ matrix are the potential on the four corners of the square defined by the two finite element triangles.
+			
+			Use the Python function implemented in Listing \ref{lst:finite_element}, we are able to calculate the energy contained in a single quadrant using Equation \ref{USU}. The following calculation is performed to find the total capacitance per unit length:
+			$$
+				C = \frac{2E}{V^2} = \frac{2\varepsilon_0 W}{V^2} = 5.2137\times 10^{-11}F/m
+			$$
+			which equals to $52.137pF/m$.
 	\newpage
 	\begin{appendices}
 		
