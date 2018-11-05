@@ -1,4 +1,0 @@
-potentials = SIMPLE2D_M('input.dat');
-f = fopen('potentials.dat', 'w+');
-fprintf(f, '%d %f %f %f\r\n', potentials.')
-potentials

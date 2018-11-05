@@ -1,14 +1,17 @@
 from matrix import Matrix
 from finite_difference import Node
 
+EPSILON = 8.854188e-12
 HIGH_VOLTAGE = 110
 LOW_VOLTAGE = 0
 SPACING = 0.02
+s_vec = [[1, -0.5, 0, -0.5],[-0.5, 1, -0.5, 0],[0, -0.5, 1, -0.5],[-0.5, 0, -0.5, 1]]
+S = Matrix(s_vec, 4, 4)
 f = open('SIMPLE2Dinput.dat', 'w')
 
 
 class two_element(object):
-    def __init__(self, x, y, bl_node):
+    def __init__(self, x, y, bl_node, id):
         """
         This is the constructor of a two-triangle finite element
         the vertices are numbered from 0 to 5, replacing 1 - 6 in question 1
@@ -29,6 +32,8 @@ class two_element(object):
         self._tl_node = bl_node + 6
         self._br_node = bl_node + 1
         self._tr_node = bl_node + 7
+
+        self._id = id
 
         if (self._bl_x + SPACING) > 0.1 or (self._bl_y + SPACING) > 0.1:
             raise ValueError("The finite elements cannot exceed the third quadrant!")
@@ -143,6 +148,44 @@ class two_element(object):
     def vertex(self, i):
         return self._vertex_array[i]
 
+    @property
+    def id(self):
+        return self._id
+
+
+def calc_energy(fe_matrix):
+    file = open('potentials.dat', mode='r', encoding='utf-8-sig')
+    lines = file.readlines()
+    file.close()
+    potentials = [0 for _ in range(len(lines))]
+
+    energy = 0
+
+    count = 0
+    for line in lines:
+        line = line.split(' ')
+        line = [i.strip() for i in line]
+        potentials[count] = line[3]
+        count += 1
+
+    for i in range(4, -1, -1):
+        for j in range(5):
+            temp_two_element = fe_matrix[i][j]
+
+            if temp_two_element is not None:
+                u_vec = [[0] for _ in range(4)]
+                U = Matrix(u_vec, 4, 1)
+
+                U[0][0] = float(potentials[temp_two_element.id])
+                U[1][0] = float(potentials[temp_two_element.id + 1])
+                U[2][0] = float(potentials[temp_two_element.id + 6])
+                U[3][0] = float(potentials[temp_two_element.id + 7])
+
+                energy += 0.5 * EPSILON * U.T.dot_product(S).dot_product(U)[0][0]
+
+    return energy
+
+
 if __name__ == "__main__":
     fe_vec = [[None for _ in range(5)] for _ in range(5)]
     fe_matrix = Matrix(fe_vec, 5, 5)
@@ -151,14 +194,14 @@ if __name__ == "__main__":
     count = 0
 
     print("Creating the mesh of the finite elements...")
-    node_count = 1
+    node_count = 0
     for i in range(4, -1, -1):
         x_coord = 0
         for j in range(5):
             if x_coord >= 0.06 and y_coord == 0.08:
                 break
             else:
-                temp_two_element = two_element(x_coord, y_coord, node_count)
+                temp_two_element = two_element(x_coord, y_coord, node_count, node_count)
                 fe_matrix[i][j] = temp_two_element
                 node_count += 1
                 count += 1
@@ -248,3 +291,6 @@ if __name__ == "__main__":
                     f.write('%d %.3f\n' % (temp_two_element.tr_node, HIGH_VOLTAGE))
             else:
                 break
+
+    energy = calc_energy(fe_matrix)
+    print(energy)
