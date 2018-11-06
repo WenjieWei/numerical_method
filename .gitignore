@@ -9,6 +9,12 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+/a1/.idea/*.xml
+/a2/.idea/*.xml
+/a2/.idea/workspace.xml
+/a2/.idea/a2.iml
+/a1/.idea/a1.iml
+
 # Generated files
 .idea/**/contentModel.xml
 
@@ -495,6 +501,7 @@ fabric.properties
 ./a1/.idea
 ./a1/__pycache__
 ./a2/.idea
+./a2/__pycache__
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
