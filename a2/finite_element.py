@@ -176,9 +176,9 @@ def calc_energy(fe_matrix):
                 u_vec = [[0] for _ in range(4)]
                 U = Matrix(u_vec, 4, 1)
 
-                U[0][0] = float(potentials[temp_two_element.bl_node - 1])
-                U[1][0] = float(potentials[temp_two_element.bl_node])
-                U[2][0] = float(potentials[temp_two_element.bl_node + 5])
+                U[0][0] = float(potentials[temp_two_element.bl_node + 5])
+                U[1][0] = float(potentials[temp_two_element.bl_node - 1])
+                U[2][0] = float(potentials[temp_two_element.bl_node])
                 U[3][0] = float(potentials[temp_two_element.bl_node + 6])
 
                 energy += 0.5 * EPSILON * U.T.dot_product(S.dot_product(U))[0][0]
@@ -299,5 +299,5 @@ if __name__ == "__main__":
 
     energy = 4 * calc_energy(fe_matrix)
     capacitance = 2 * energy / (HIGH_VOLTAGE * HIGH_VOLTAGE)
-    print(energy)
-    print(capacitance)
+    print("Energy enclosed between the conductors is " + str(energy) + "J")
+    print("The calculated capacitance is " + str(capacitance) + "F")
