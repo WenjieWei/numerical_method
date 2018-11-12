@@ -1,6 +1,3 @@
-import math
-
-
 class Matrix(object):
     def __init__(self, vec, rows, cols):
         self._vec = vec
@@ -33,6 +30,18 @@ class Matrix(object):
 
         transposed_matrix = Matrix(vec_trans, self.cols, self.rows)
         return transposed_matrix
+
+    def add(self, other):
+        if self.rows != other.rows or self.cols != other.cols:
+            raise ValueError("Incorrect dimension for matrix addition.")
+
+        result_vec = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        result = Matrix(result_vec, self.rows, self.cols)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                result[i][j] = self[i][j] + other[i][j]
+
+        return result
 
     def minus(self, other):
         if self.cols != other.cols or self.rows != other.rows:

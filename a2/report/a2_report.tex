@@ -338,6 +338,12 @@
 				C = \frac{2E}{V^2} = \frac{2\varepsilon_0 W}{V^2} = 5.2137\times 10^{-11}F/m
 			$$
 			which equals to $52.137pF/m$.
+			
+		\section{Conjugate Gradient}
+			\subsection{S. P. C Check}
+				Use the Choleski decomposition implemented in the previous assignment to check if the matrix \textbf{\textit{A}} is symmetric, positive and definite. The program fails with an exception when performing the symmetry check. Therefore, the matrix is not symmetric, positive definite. 
+				
+				To obtain a symmetric, positive definite matrix in order to pass the Choleski decomposition test, we will need to multiply $A^T$ to both sides of the equation. 
 	\newpage
 	\begin{appendices}
 		

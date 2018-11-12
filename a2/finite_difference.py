@@ -1,4 +1,4 @@
-import math, csv
+import csv
 from matrix import Matrix
 
 
@@ -9,9 +9,12 @@ CORE_VOLTAGE = 110
 TOLERANCE = 0.00001
 
 class Node(object):
-    def __init__(self, value):
+    def __init__(self, value, id=None):
         self._value = value
         self._is_free = True
+
+        if id is not None:
+            self._id = id
 
     def set_value(self, value):
         self._value = value
@@ -22,6 +25,9 @@ class Node(object):
     def set_fixed(self):
         self._is_free = False
 
+    def set_id(self, id):
+        self._id = id
+
     @property
     def value(self):
         return self._value
@@ -29,6 +35,10 @@ class Node(object):
     @property
     def is_free(self):
         return self._is_free
+
+    @property
+    def id(self):
+        return self._id
 
 class UniformMesh(object):
     """
