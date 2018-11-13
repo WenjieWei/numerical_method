@@ -140,7 +140,7 @@ def solve_cg(A, b):
         if math.sqrt(residual) < TOLERANCE:
             break
 
-    return x, iteration
+    return x, iteration, r_list
 
 if __name__ == "__main__":
     os.chdir('outputs')
@@ -153,11 +153,11 @@ if __name__ == "__main__":
     b = fd_matrix.T.dot_product(v)
 
     x = solve_chol(A, b)
-    x_cg, iterations = solve_cg(A, b)
+    x_cg, iterations, r_list = solve_cg(A, b)
 
     with open('cg_result.csv', 'w', newline='') as csv_file:
         row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
-        row_writer.writerow(['x', 'y', 'Choleski', 'CG'])
+        row_writer.writerow(['$x$', '$y$', 'Choleski', 'CG'])
 
         x_coord = 0.02
         y_coord = 0.02
@@ -165,11 +165,31 @@ if __name__ == "__main__":
         for i in range(19):
             row_writer.writerow(['%.2f, %.2f' % (x_coord, y_coord), str(x[i][0]), str(x_cg[i][0])])
             x_coord += 0.02
-            if x_coord == 0.08 and y_coord > 0.04:
+            if y_coord == 0.08 and x_coord > 0.04:
                 x_coord = 0.02
                 y_coord += 0.02
             elif (i + 1) % 5 == 0 and i != 0:
                 y_coord += 0.02
                 x_coord = 0.02
+    csv_file.close()
 
     print(iterations)
+
+    with open('norm.csv', 'w', newline='') as csv_file:
+        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
+        row_writer.writerow(['iterations', 'inf-norm', '2-norm'])
+
+        count = 0
+        for residual in r_list:
+            max = 0
+            two_norm = 0
+            for i in range(residual.rows):
+                if residual[i][0] > max:
+                    max = residual[i][0]
+
+                two_norm += residual[i][0] ** 2
+
+            two_norm = math.sqrt(two_norm)
+            row_writer.writerow([str(count), str(max), str(two_norm)])
+            count += 1
+    csv_file.close()

@@ -340,10 +340,66 @@
 			which equals to $52.137pF/m$.
 			
 		\section{Conjugate Gradient}
-			\subsection{S. P. C Check}
-				Use the Choleski decomposition implemented in the previous assignment to check if the matrix \textbf{\textit{A}} is symmetric, positive and definite. The program fails with an exception when performing the symmetry check. Therefore, the matrix is not symmetric, positive definite. 
+			Listing \ref{lst:conjugate_gradient} shows the implementation of the conjugate gradient method. The important step of this problem is to find the matrix \textbf{\textit{A}} and the vector \textbf{\textit{b}} used for Choleski decomposition and conjugate gradient.
+			
+			For this particular problem, using a five-point difference model discussed before, the \textbf{\textit{A}} matrix is constructed for the free nodes lying between the conductors. Each free node is represented by a row in the \textbf{\textit{A}} matrix. The \textbf{\textit{b}} vector is composed of the fixed voltage values directly neighboring the free nodes, either 0 or -110$V$.
+			\subsection{S. P. D. Check}
+				Use the Choleski decomposition implemented in the previous assignment and check if the matrix \textbf{\textit{A}} is symmetric, positive definite. The program fails with an exception when performing the symmetry check. Therefore, the matrix is not symmetric, positive definite. 
 				
-				To obtain a symmetric, positive definite matrix in order to pass the Choleski decomposition test, we will need to multiply $A^T$ to both sides of the equation. 
+				To obtain a symmetric, positive definite matrix in order to pass the Choleski decomposition test, we multiply the transpose of matrix \textbf{\textit{A}} to both sides of the equation, obtaining:
+				\begin{align*}
+					A\vec{x} &= \vec{b}\\
+					A^T \cdot A\vec{x} &= A^T\vec{b}
+				\end{align*}
+				
+				$A^T \cdot A$ is proved to be symmetric, positive definite. This way, the Choleski decomposition succeeds. The result of the computations will be discussed in the following sections. 
+			\subsection{Choleski and C.G. Results}	
+				Table \ref{table:cg_result} shows the comparison between the computational results of Choleski decomposition and conjugate gradient.			
+				\begin{table}[!htb]
+					\centering
+					\caption{Computational Results of Choleski Decomposition and Conjugate Gradient}
+					\csvautobooktabular{../outputs/cg_result.csv}
+					\label{table:cg_result}
+				\end{table}
+			
+				The error tolerance of the conjugate gradient method is set to be $1\times 10^{-5}$. As can be seen from the table, the results returned by the two algorithms are very similar. There is a difference at the order of $10^{-10}$, which is small enough to neglect for this problem.
+			\subsection{$\infty$ Norm and 2-Norm}
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.7\linewidth]{two_norm_plot}
+					\caption{Plot of $2y$-norm v.s. iterations}
+					\label{two_norm_plot}
+				\end{figure}	
+				To calculate the $\infty$-norm and 2-norm of the residual vectors, we apply the following equations:
+				\begin{equation}
+					||r||_{\infty} = max(r_i)
+				\end{equation}
+				\begin{equation}
+					||r||_2 = \sqrt{\sum_{i} |r_i|^2}
+				\end{equation}
+				
+				Table \ref{table:norm} shows the $\infty$-norm and two-norm results of the conjugate gradient algorithm. Figure \ref{two_norm_plot} shows the $\infty$-norm and the two-norm plots with respect to the number of iterations. The orange line represents the two-norm curve and the blue line represents the $\infty$-norm curve. 
+				\begin{table}[!htb]
+					\centering
+					\caption{$\infty$-Norm and two-Norm}
+					\csvautobooktabular{../outputs/norm.csv}
+					\label{table:norm}
+				\end{table}
+			\subsection{Potential at (0.06, 0.04)}
+				From Table \ref{table:cg_result}, the potential at (0.06, 0.04) calculated by Choleski decomposition and conjugate gradient is 40.527$V$, which matches the result calculated in Section 2.b using SIMPLE2D.m.
+				
+				According to the results from the previous assignment, with $h = 0.02$, the potential calculated by SOR is 40.526$V$, which also matches the results calculated using the algorithms stated above. 
+			\subsection{Computation of Capacitance per Unit Length}
+				To compute the capacitance per unit length between the conductors, we go back and apply Equation \ref{capacitance} and transform it to the following form:
+				$$
+					C = \frac{2E}{V^2}
+				$$
+				
+				To use this equation, we will need to find the total electrical energy enclosed between the conductors. Use Gauss's Law, the equation below can be derived:
+				\begin{equation}
+					E = \frac{1}{2} \int_{V} \varepsilon_0E^2dv
+				\end{equation}
+							
 	\newpage
 	\begin{appendices}
 		
@@ -371,6 +427,13 @@
 			\label{lst:potential.dat}
 		\end{center}
 		\newpage
+		
+		\onecolumn
+		\begin{center}
+			\captionof{listing}{Conjugate Gradient Implementation}
+			\inputminted{python}{../conjugate_gradient.py}
+			\label{lst:conjugate_gradient}
+		\end{center}
 		
 	\end{appendices}
 	

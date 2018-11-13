@@ -290,7 +290,6 @@ def write_mesh(fe_matrix):
             else:
                 break
 
-
 if __name__ == "__main__":
     fe_vec = [[None for _ in range(5)] for _ in range(5)]
     fe_matrix = Matrix(fe_vec, 5, 5)
