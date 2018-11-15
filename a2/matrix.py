@@ -91,7 +91,7 @@ class Matrix(object):
         for i in range(self.rows):
             print("|", end=" ")
             for j in range(self.cols):
-                print("%f" % self[i][j], end=" ")
+                print("%d" % self[i][j], end=" ")
             print("|")
 
     @property

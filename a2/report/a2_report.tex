@@ -318,7 +318,7 @@
 		\subsection{Potential Solved by SIMPLE2D.m}
 			Use the input file generated in the previous section, we are able to use the \MATLAB file to calculate the potential at every node we have specified. The output of the SIMPLE2D.m file is shown in Listing \ref{lst:potential.dat}. The target node (0.06, 0.04) is highlighted in blue as Node 16, and from Listing \ref{lst:potential.dat} shows that the potential at this node is $40.527V$.
 			
-		\subsection{Capacitance per Unit Length}
+		\subsection{Capacitance per Unit Length}\label{find_capacitance}
 			To compute the capacitance, apply the fundamental Equation \ref{capacitance}: 
 			\begin{equation}
 				E = \frac{1}{2} CV^2
@@ -354,9 +354,26 @@
 			$$
 			to perform Choleski decomposition and conjugate gradient.
 			
-			For this particular problem, we construct two \textbf{\textit{A}} matrices using the five-point configuration for the free nodes and fixed nodes in the system. Two $\vec{v}$ vectors are also constructed to represent the potentials of the free nodes and fixed nodes. The values of the free node potentials were initialized to 0. Therefore, the $\vec{v}$ vectors contain either 0 or 110$V$. 
+			For this particular problem, since the Laplace's equation
+			\begin{equation}
+				\nabla ^2V = 0
+			\end{equation}
+			holds for every free node, the matrix equation
+			$$
+				\textbf{A}\vec{v} = 0
+			$$
+			is a valid assumption. Therefore, we may fill up the $\vec{b}$ with 0 and $-110V$, to the nearest free node of the Dirichlet nodes, which results in a $\vec{b}^T$ shown in Figure \ref{v_T}.
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=0.7\linewidth]{v_T}
+				\caption{Initialized $\vec{b}^T$ vector}
+				\label{v_T}
+			\end{figure}
+		
+			With the matrices and vectors generated, we may proceed and calculate the potential at every node of this system using Choleski decomposition and conjugate gradient. 
+			
 			\subsection{S. P. D. Check}
-				Use the Choleski decomposition implemented in the previous assignment and check if the matrix \textbf{\textit{A}} is symmetric, positive definite. The program fails with an exception when performing the symmetry check. Therefore, the matrix is not symmetric, positive definite. 
+				Use the Choleski decomposition implemented in the previous assignment and check if the matrix \textbf{\textit{A}} is symmetric, positive definite. The program fails with an exception when performing the symmetry check. Moreover, by inspection of the diagonal, it is obvious that the matrix is not positive definite. Therefore, the matrix \textit{\textbf{A}} is not symmetric, positive definite. 
 				
 				To obtain a symmetric, positive definite matrix in order to pass the Choleski decomposition test, we multiply the transpose of matrix \textbf{\textit{A}} to both sides of the equation, obtaining:
 				\begin{align*}
@@ -407,13 +424,15 @@
 					C = \frac{2E}{V^2}
 				$$
 				
-				To use this equation, we will need to find the total electrical energy enclosed between the conductors. Use Gauss's Law, the equation below can be derived:
+				Where $E$ is the electric field. The energy stored in the electric field is given by
 				\begin{equation}
-					E = \frac{1}{2} \int_{V} \varepsilon_0V^2dv
+					U_E = \frac{\varepsilon_0}{2}\int \int (E_x^2 + E_y^2)dxdy
 				\end{equation}
 				
-				For the discrete finite difference algorithm, we will need to 
-				take the sum instead of the integration, which will end up with the same process as is implemented in Section 2.c.
+				Since we have already calculated the potential at every node, we can sum up the results and thus find the capacitance formed by the coaxial cable conductors.
+				
+				Alternatively, we could again use the finite element method discussed in Section \ref{find_capacitance} to find the capacitance per unit length.
+				
 	\newpage
 	\begin{appendices}
 		

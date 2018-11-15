@@ -1,7 +1,7 @@
 from finite_difference import Node
 from matrix import Matrix
 from choleski import solve_chol
-import math, csv, os, time
+import math, csv, os
 
 TOLERANCE = 1e-5
 
@@ -98,6 +98,7 @@ def free_node_fd_gen(free_nodes_matrix, num_free_node):
     v_matrix[13][0] = -110
     v_matrix[12][0] = -110
 
+    v_matrix.T.print_matrix()
     return fd_matrix, v_matrix
 
 def solve_cg(A, b):
