@@ -56,7 +56,7 @@
 	\newpage
 	
 	\section*{Introduction}
-		In this assignment, three numerical methods discussed in class were explored. The interpreter used for the Python codes is Python 3.6. 
+		In this assignment, triangular finite element and conjugate gradient methods discussed in class were explored. The interpreter used for the Python codes is Python 3.6. 
 		
 	\section{First Order Finite Element Problem}
 		Figure \ref{prob} shows an illustration of the first order triangular finite element problem to be solved. 
@@ -333,16 +333,28 @@
 			
 			The value of the entries in the $U$ matrix are the potential on the four corners of the square defined by the two finite element triangles.
 			
-			Use the Python function implemented in Listing \ref{lst:finite_element} which applies Equation \ref{USU}, we are able to calculate the total energy contained in the cable. The energy contained in the cable is calculated to be $3.154\times 10^{-7}J$. The following calculation is performed to find the total capacitance per unit length:
+			Use the Python function implemented in Listing \ref{lst:finite_element} which applies Equation \ref{USU}, we are able to calculate the total energy contained in the cable. The calculation for the energy and capacitance is shown in Figure \ref{q2_run}.
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=0.7\linewidth]{q2_run}
+				\caption{Running Results of $finite\_element.py$}
+				\label{q2_run}
+			\end{figure}
+			
+			The energy contained in the cable per unit length is calculated to be $3.154\times 10^{-7}J/m$. The following calculation is performed to find the total capacitance per unit length:
 			$$
 				C = \frac{2E}{V^2} = \frac{2\varepsilon_0 W}{V^2} = 5.2137\times 10^{-11}F/m
 			$$
 			which equals to $52.137pF/m$.
 			
 		\section{Conjugate Gradient}
-			Listing \ref{lst:conjugate_gradient} shows the implementation of the conjugate gradient method. The important step of this problem is to find the matrix \textbf{\textit{A}} and the vector \textbf{\textit{b}} used for Choleski decomposition and conjugate gradient.
+			Listing \ref{lst:conjugate_gradient} shows the implementation of the conjugate gradient method. The important step of this problem is to find the matrix \textbf{\textit{A}} and the vector $\vec{b}$ to form the equation
+			$$
+				A\vec{x} = \vec{b}
+			$$
+			to perform Choleski decomposition and conjugate gradient.
 			
-			For this particular problem, using a five-point difference model discussed before, the \textbf{\textit{A}} matrix is constructed for the free nodes lying between the conductors. Each free node is represented by a row in the \textbf{\textit{A}} matrix. The \textbf{\textit{b}} vector is composed of the fixed voltage values directly neighboring the free nodes, either 0 or -110$V$.
+			For this particular problem, we construct two \textbf{\textit{A}} matrices using the five-point configuration for the free nodes and fixed nodes in the system. Two $\vec{v}$ vectors are also constructed to represent the potentials of the free nodes and fixed nodes. The values of the free node potentials were initialized to 0. Therefore, the $\vec{v}$ vectors contain either 0 or 110$V$. 
 			\subsection{S. P. D. Check}
 				Use the Choleski decomposition implemented in the previous assignment and check if the matrix \textbf{\textit{A}} is symmetric, positive definite. The program fails with an exception when performing the symmetry check. Therefore, the matrix is not symmetric, positive definite. 
 				
@@ -367,7 +379,7 @@
 				\begin{figure}[H]
 					\centering
 					\includegraphics[width=0.7\linewidth]{two_norm_plot}
-					\caption{Plot of $2y$-norm v.s. iterations}
+					\caption{Plot of $\infty$-norm and $2$-norm v.s. iterations}
 					\label{two_norm_plot}
 				\end{figure}	
 				To calculate the $\infty$-norm and 2-norm of the residual vectors, we apply the following equations:
@@ -397,9 +409,11 @@
 				
 				To use this equation, we will need to find the total electrical energy enclosed between the conductors. Use Gauss's Law, the equation below can be derived:
 				\begin{equation}
-					E = \frac{1}{2} \int_{V} \varepsilon_0E^2dv
+					E = \frac{1}{2} \int_{V} \varepsilon_0V^2dv
 				\end{equation}
-							
+				
+				For the discrete finite difference algorithm, we will need to 
+				take the sum instead of the integration, which will end up with the same process as is implemented in Section 2.c.
 	\newpage
 	\begin{appendices}
 		
@@ -434,7 +448,11 @@
 			\inputminted{python}{../conjugate_gradient.py}
 			\label{lst:conjugate_gradient}
 		\end{center}
-		
+		\begin{center}
+			\captionof{listing}{Choleski Decompostition Implementation}
+			\inputminted{python}{../choleski.py}
+			\label{lst:chol}
+		\end{center}
 	\end{appendices}
 	
 \end{document}

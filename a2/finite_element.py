@@ -298,5 +298,5 @@ if __name__ == "__main__":
 
     energy = 4 * calc_energy(fe_matrix)
     capacitance = 2 * energy / (HIGH_VOLTAGE * HIGH_VOLTAGE)
-    print("Energy enclosed between the conductors is " + str(energy) + "J")
-    print("The calculated capacitance is " + str(capacitance) + "F")
+    print("Energy enclosed between the conductors is " + str(energy) + "J/m")
+    print("The calculated capacitance is " + str(capacitance) + "F/m")

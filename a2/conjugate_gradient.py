@@ -15,6 +15,7 @@ def third_quarter_node_gen():
     node_matrix = Matrix(temp_vec, 6, 6)
     counter = 0
     free_node_counter = 0
+    fix_node_counter = 0
 
     for i in range(5, -1, -1):
         for j in range(6):
@@ -24,16 +25,18 @@ def third_quarter_node_gen():
             elif j == 0 or i == 5:
                 temp_node.set_fixed()
                 node_matrix[i][j] = temp_node
+                fix_node_counter += 1
             elif i <= 1 and j >= 3:
                 temp_node.set_value(110)
                 temp_node.set_fixed()
                 node_matrix[i][j] = temp_node
+                fix_node_counter += 1
             else:
                 node_matrix[i][j] = temp_node
                 free_node_counter += 1
             counter += 1
 
-    return node_matrix, free_node_counter
+    return node_matrix, free_node_counter, fix_node_counter
 
 def free_node_fd_gen(free_nodes_matrix, num_free_node):
     # remove the fixed nodes and change the id of the free nodes
@@ -124,7 +127,10 @@ def solve_cg(A, b):
         x_list.append(x)
 
         r = b.minus(A.dot_product(x))
-        r_list.append(r)
+        if iteration != 1:
+            r_list.append(r)
+        else:
+            pass
 
         pAr = p.T.dot_product(A.dot_product(r))
         pAp = p.T.dot_product(A.dot_product(p))
@@ -144,7 +150,7 @@ def solve_cg(A, b):
 
 if __name__ == "__main__":
     os.chdir('outputs')
-    node_matrix, free_node_counter = third_quarter_node_gen()
+    node_matrix, free_node_counter, fix_node_counter = third_quarter_node_gen()
 
     free_nodes = node_matrix.clone()
     fd_matrix, v = free_node_fd_gen(free_nodes, free_node_counter)
@@ -173,13 +179,11 @@ if __name__ == "__main__":
                 x_coord = 0.02
     csv_file.close()
 
-    print(iterations)
-
     with open('norm.csv', 'w', newline='') as csv_file:
         row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
         row_writer.writerow(['iterations', 'inf-norm', '2-norm'])
 
-        count = 0
+        count = 1
         for residual in r_list:
             max = 0
             two_norm = 0
@@ -193,3 +197,4 @@ if __name__ == "__main__":
             row_writer.writerow([str(count), str(max), str(two_norm)])
             count += 1
     csv_file.close()
+    print("File writing complete.")
