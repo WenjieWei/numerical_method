@@ -502,6 +502,8 @@ fabric.properties
 ./a1/__pycache__
 ./a2/.idea
 ./a2/__pycache__
+./a3/.idea
+./a3/__pycache__
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
