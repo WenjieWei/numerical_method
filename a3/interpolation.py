@@ -1,11 +1,14 @@
 from matrix import Matrix
+from polynomial import Polynomial
 import matplotlib.pyplot as plt
+import csv, math
 
 
-def lagrange_interpolate(x, y):
+def lagrange_full_domain():
     pass
 
-if __name__ == "__main__":    
-    b_data = [[0, 1.3, 1.4, 1.7, 1.8, 1.9]]
-    b_matrix = Matrix(b_data, 1, 6).T
-    b_matrix.print_matrix()
+if __name__ == "__main__":
+    with open('./data/M19_BH.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter = ',')
+        row = next(csv_reader)
+        
