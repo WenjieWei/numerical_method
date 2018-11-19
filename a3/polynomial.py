@@ -2,9 +2,9 @@ from matrix import Matrix
 
 
 class Polynomial():
-    def __init__(self, order, coeff):
-        self._order = order
+    def __init__(self, coeff):
         self._coeff = coeff
+        self._order = len(coeff) - 1
 
     @property
     def order(self):
