@@ -46,3 +46,5 @@ class Polynomial(object):
     def coefficient(self):
         return self._coeff
     
+if __name__ == "__main__":
+    pass
