@@ -10,21 +10,29 @@ class Polynomial(object):
         return self._coeff[item]
 
     def __add__(self, other):
-        large_order = max(self.order, other.order)
-        small_order = min(self.order, other.order)
-        result_coeff = [0 for _ in range(large_order + 1)]
+        self_has_higher_order = (max(self.order, other.order) == self.order)
 
-        for i in range(small_order):
-            result_coeff[i] = self[i] + other[i]
+        if(self_has_higher_order):
+            big_coeff = self.coefficient
+            small_coeff = other.coefficient
+        else:
+            big_coeff = other.coefficient
+            small_coeff = self.coefficient
 
-        for i in range(small_order, large_order + 1):
-            if self.order >= other.order:
-                result_coeff[i] = self[i]
-            else:
-                result_coeff[i] = other[i]
+        for i in range(len(small_coeff), len(big_coeff)):
+            small_coeff.append(0)
 
-        result = Polynomial(result_coeff)
-        return result
+        result_coeff = []
+        for i in range(len(big_coeff)):
+            result_coeff.append(small_coeff[i] + big_coeff[i])
+
+        return Polynomial(result_coeff)
+
+    def __sub__(self, other):
+        pass
+
+    def __mul__(self, other):
+        pass
 
     def toString(self):
         print("y = ", end="")
@@ -45,6 +53,34 @@ class Polynomial(object):
     @property
     def coefficient(self):
         return self._coeff
-    
+
+class LagrangePolynomial(object):
+    def __init__(self, n, xr):
+        self._order = n
+        self._xr = []
+        self._L_list = [None for _ in range(n)]
+        self._numerator = [None for _ in range(n - 1)]
+
+        for i in range(len(xr)):
+            self._xr.append(-xr[i])
+
+        for j in range(n):
+            counter = 0
+            skipped = False
+            for r in range(n):
+                if counter == j:
+                    counter += 1
+                    skipped = True
+
+                if not skipped:
+                    temp_poly = Polynomial([xr[counter], 1])
+                    self._numerator[counter] = temp_poly
+                else:
+                    temp_poly = Polynomial([xr[counter], 1])
+                    self._numerator[counter - 1] = temp_poly
+
+                temp_poly.toString()
+
 if __name__ == "__main__":
-    pass
+    coeff = [1,2,3]
+    l = LagrangePolynomial(3, coeff)
