@@ -37,59 +37,63 @@ class Polynomial(object):
         return self._coeff[item]
 
     def __add__(self, other):
-        self_has_higher_order = (max(self.order, other.order) == self.order)
-
-        if self_has_higher_order:
-            big_coeff = self.coefficient
-            small_coeff = other.coefficient
-        else:
-            big_coeff = other.coefficient
-            small_coeff = self.coefficient
-
-        for i in range(len(small_coeff), len(big_coeff)):
-            small_coeff.append(0)
-
         result_coeff = []
-        for i in range(len(big_coeff)):
-            result_coeff.append(small_coeff[i] + big_coeff[i])
+
+        if isinstance(other, int):
+            result_coeff = self._coeff
+            result_coeff[0] += other
+        else:
+            self_has_higher_order = (max(self.order, other.order) == self.order)
+
+            if self_has_higher_order:
+                big_coeff = self.coefficient
+                small_coeff = other.coefficient
+            else:
+                big_coeff = other.coefficient
+                small_coeff = self.coefficient
+
+            for i in range(len(small_coeff), len(big_coeff)):
+                small_coeff.append(0)
+
+            for i in range(len(big_coeff)):
+                result_coeff.append(small_coeff[i] + big_coeff[i])
 
         return Polynomial(result_coeff)
 
     def __sub__(self, other):
-        self_has_higher_order = (max(self.order, other.order) == self.order)
-
-        if self_has_higher_order:
-            for i in range(len(other.coefficient), len(self.coefficient)):
-                other.coefficient.append(0)
-        else:
-            for i in range(len(self.coefficient), len(other.coefficient)):
-                self.coefficient.append(0)
-
         result_coeff = []
-        for i in range(len(self.coefficient)):
-            result_coeff.append(self.coefficient[i] - other.coefficient[i])
+        if isinstance(other, int):
+            result_coeff = self._coeff
+            result_coeff[0] -= other
+
+        else:
+            self_has_higher_order = (max(self.order, other.order) == self.order)
+
+            if self_has_higher_order:
+                for i in range(len(other.coefficient), len(self.coefficient)):
+                    other.coefficient.append(0)
+            else:
+                for i in range(len(self.coefficient), len(other.coefficient)):
+                    self.coefficient.append(0)
+
+            for i in range(len(self.coefficient)):
+                result_coeff.append(self.coefficient[i] - other.coefficient[i])
 
         return Polynomial(result_coeff)
 
     def __mul__(self, other):
         result_coefficients = []
 
-        if isinstance(self, Polynomial) and isinstance(other, Polynomial):
-            result_order = self.order + other.order
+        result_order = self.order + other.order
 
-            for i in range(result_order + 1):
-                coefficient = 0
-                for j in range(self.order + 1):
-                    for k in range(other.order + 1):
-                        if j + k == i:
-                            coefficient += self[j] * other[k]
+        for i in range(result_order + 1):
+            coefficient = 0
+            for j in range(self.order + 1):
+                for k in range(other.order + 1):
+                    if j + k == i:
+                        coefficient += self[j] * other[k]
 
-                result_coefficients.append(coefficient)
-        elif isinstance(self, Polynomial) and isinstance(other, int):
-            for i in range(len(self._coeff)):
-                result_coefficients.append(other * self[i])
-        else:
-            print("The format should be polynomial * polynomial or polynomial * constant.")
+            result_coefficients.append(coefficient)
 
         return Polynomial(result_coefficients)
 
@@ -112,6 +116,9 @@ class Polynomial(object):
             print("- " + str(-self[0]))
         else:
             print("+ " + str(self[0]))
+
+    def modify_const(self, value):
+        self._coeff[0] = value
 
     @property
     def order(self):
@@ -145,6 +152,8 @@ class LagrangePolynomial(object):
         self._numerator = self._create_numerator()
         self._denominator = self._create_denominator(xj)
 
+        self._polynomial = self._create_polynomial()
+
     def _create_numerator(self):
         """
         This method creates the list of the parameters x_r.
@@ -175,6 +184,15 @@ class LagrangePolynomial(object):
 
         return self._numerator.calculate(x)
 
+    def _create_polynomial(self):
+        """
+        This method creates the general form of the lagrange polynomial.
+        :return:
+        """
+        denom = Polynomial([1 / self._denominator])
+
+        return denom * self._numerator
+
     def set_x(self, value):
         self._x = value
 
@@ -194,11 +212,14 @@ class LagrangePolynomial(object):
     def numerator(self):
         return self._numerator
 
+    @property
+    def poly(self):
+        return self._polynomial
+
 
 if __name__ == "__main__":
     coeff1 = Polynomial([2])
     coeff2 = Polynomial([4, 5, 7, 8])
 
     coeff2.toString()
-    (coeff2 * 3).toString()
-    coeff2.derive(3).toString()
+    (coeff2 - 3).toString()

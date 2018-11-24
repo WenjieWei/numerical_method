@@ -1,5 +1,5 @@
 from polynomial import Polynomial, LagrangePolynomial
-from interpolation import lagrange_full_domain
+from interpolation import lagrange_full_domain, cubit_hermite
 import matplotlib.pyplot as plt
 import csv, os
 
@@ -21,6 +21,22 @@ def read_BH_file(filename):
             h_vec.append(float(row[1]))
 
     return b_vec, h_vec
+
+def calc_slope(X, Y, target):
+    slope = []
+
+    result = (Y[1] - Y[0]) / (X[1] - X[0])
+    slope.append(result)
+    for i in range(1, len(target) - 1):
+        j = Y.index(target[i])
+        result = (Y[j + 1] - Y[j - 1]) / (X[j + 1] - X[j - 1])
+
+        slope.append(result)
+
+    result = (Y[i + 1] - Y[i]) / (X[i + 1] - X[i])
+    slope.append(result)
+
+    return slope
 
 
 def curve_plot(poly, filename, up):
@@ -51,6 +67,8 @@ if __name__ == "__main__":
     #B, H = read_BH_file(filename)
 
     print("This is the output log of assignment 3.")
+
+    # ======= Part a =======
     print("Running (a) of Problem 1...")
     H = [0.0, 14.7, 36.5, 71.7, 121.4, 197.4]
     B = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
@@ -62,6 +80,7 @@ if __name__ == "__main__":
 
     curve_plot(poly, filename, 200)
 
+    # ====== Part b ======
     print("Running (b) of Problem 1...")
     H = [0.0, 540.6, 1062.8, 8687.4, 13924.3, 22650.2]
     B = [0.0, 1.3, 1.4, 1.7, 1.8, 1.9]
@@ -71,3 +90,26 @@ if __name__ == "__main__":
     poly.toString()
     filename = "B_H_second_six.png"
     curve_plot(poly, filename, 22651)
+
+    # ====== Part c ======
+    print("Running Part (c) of Problem 1...")
+    print("The slope at the data points are calculated as follows:")
+
+    B, H = read_BH_file("M19_BH.csv")
+    for i in H:
+        print(i, end=", ")
+
+    print()
+    slopes = calc_slope(H, B, B)
+    for i in slopes:
+        print(i, end=", ")
+
+    filename = "Cubic Hermite.png"
+    poly = cubit_hermite(H, B, slopes)
+    print("The interpolated polynomial is:")
+    poly.toString()
+
+    print("test point" + str(540.6) + "=" + str(poly.calculate(540.6)))
+    print("test point" + str(1062.8) + "=" + str(poly.calculate(1062.8)))
+    print("test point" + str(8687.4) + "=" + str(poly.calculate(8687.4)))
+    curve_plot(poly, filename, 22561)
