@@ -19,6 +19,20 @@ class Polynomial(object):
 
         return result
 
+    def derive(self, der_order):
+        result_coeff = []
+        counter = 0
+
+        for i in range(1, len(self._coeff)):
+            result_coeff.append(i * self[i])
+        result_poly = Polynomial(result_coeff)
+        counter += 1
+
+        if counter < der_order:
+            return result_poly.derive(der_order - 1)
+        else:
+            return result_poly
+
     def __getitem__(self, item):
         return self._coeff[item]
 
@@ -58,17 +72,24 @@ class Polynomial(object):
         return Polynomial(result_coeff)
 
     def __mul__(self, other):
-        result_order = self.order + other.order
         result_coefficients = []
 
-        for i in range(result_order + 1):
-            coefficient = 0
-            for j in range(self.order + 1):
-                for k in range(other.order + 1):
-                    if j + k == i:
-                        coefficient += self[j] * other[k]
+        if isinstance(self, Polynomial) and isinstance(other, Polynomial):
+            result_order = self.order + other.order
 
-            result_coefficients.append(coefficient)
+            for i in range(result_order + 1):
+                coefficient = 0
+                for j in range(self.order + 1):
+                    for k in range(other.order + 1):
+                        if j + k == i:
+                            coefficient += self[j] * other[k]
+
+                result_coefficients.append(coefficient)
+        elif isinstance(self, Polynomial) and isinstance(other, int):
+            for i in range(len(self._coeff)):
+                result_coefficients.append(other * self[i])
+        else:
+            print("The format should be polynomial * polynomial or polynomial * constant.")
 
         return Polynomial(result_coefficients)
 
@@ -162,6 +183,10 @@ class LagrangePolynomial(object):
         return self._j
 
     @property
+    def xj(self):
+        return self._xj
+
+    @property
     def denominator(self):
         return self._denominator
 
@@ -169,7 +194,11 @@ class LagrangePolynomial(object):
     def numerator(self):
         return self._numerator
 
+
 if __name__ == "__main__":
     coeff1 = Polynomial([2])
     coeff2 = Polynomial([4, 5, 7, 8])
-    (coeff2 * coeff1).toString()
+
+    coeff2.toString()
+    (coeff2 * 3).toString()
+    coeff2.derive(3).toString()
