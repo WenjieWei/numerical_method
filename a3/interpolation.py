@@ -1,35 +1,30 @@
-from matrix import Matrix
-from polynomial import Polynomial
-import matplotlib.pyplot as plt
-import csv, os
+from polynomial import Polynomial, LagrangePolynomial
 
 
-def read_BH_file(filename):
+def lagrange_full_domain(xr, y, points=None):
     """
-    This method reads a csv file that contains the information about B and H for the M19 steel.
-    :param: filename: the filename in a String to be read.
-    :return: two matrices b_matrix and h_matrix
+    This is the method for the lagrange full domain interpolation.
+    X is the variable that varies.
+    Y is the variable that varies with respect to X.
+
+    :param X: X vector of type Matrix
+    :param Y: Y vector of type Matrix
+    :param points: select the range of data to be interpolated if needed.
+    :return: Polynomial expression for y(x)
     """
-    b_vec = []
-    h_vec = []
+    result_polynomial = Polynomial([0])
 
-    with open(filename, 'r') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter = ',')
+    if points is None:
+        for j in range(len(xr)):
+            xj = xr[j]
+            aj = y[j]
 
-        for row in csv_reader:
-            b_vec.append(float(row[0]))
-            h_vec.append(float(row[1]))
+            temp_lagrange_poly = LagrangePolynomial(len(xr), xr, j, xj)
+            temp_poly = Polynomial([aj / temp_lagrange_poly.denominator])
 
-    b_matrix = Matrix([b_vec], 1, len(b_vec)).T
-    h_matrix = Matrix([h_vec], 1, len(h_vec)).T
+            result_polynomial += temp_poly * temp_lagrange_poly.numerator
 
-    return b_matrix, h_matrix
+    else:
+        pass
 
-def lagrange_full_domain(X, Y):
-    pass
-
-if __name__ == "__main__":
-    os.chdir('data')
-    filename = 'M19_BH.csv'
-
-    B, H = read_BH_file(filename)
+    return result_polynomial
