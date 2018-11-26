@@ -93,7 +93,39 @@
 			
 			From this plot, we can see that the interpolation using the second set of data points is \textbf{not plausible} as the graph fluctuates violently as the value of $B$ goes to negative at some ranges. 		
 		
-		\subsection{Hermite Polynomial Interpolation}
+		\subsection{Cubit Hermite Polynomial Interpolation}
+			
+		\subsection{Nonlinear Equation of the Magnetic Circuit}
+			Consider the magnetic circuit shown in Figure \ref{mag_circuit}. 
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=0.8\linewidth]{mag_circuit}
+				\caption{The Magnetic Circuit Discussed About}
+				\label{mag_circuit}
+			\end{figure}
+		
+			The Magnetomotive force (MMF) can be calculated by Equation \ref{mmf},
+			\begin{equation}
+				M = (R_g + R_c)\psi
+				\label{mmf}
+			\end{equation}
+			where $R_g$ and $R_c$ are the reluctance of the air gap and the coil, respectively. Plug in the variables from the problem, we can transform Equation \ref{mmf} to the equation as follows:
+			\begin{align*}
+				M &= (\frac{l_g}{\mu_0A} + \frac{l_c}{\mu A})\psi \\
+				NI &= (\frac{l_g}{\mu_0 A} + \frac{l_cH(\psi)}{AB})\psi \\
+				NI &= (\frac{l_g}{\mu_0 A} + \frac{l_cH(\psi)}{\psi})\psi
+			\end{align*}
+			
+			Simplify the equation by bringing $NI$ to the right of the equation, and the equation will be the final formula of $f(\psi)$, as is shown in Equation
+			\begin{equation}
+				f(\psi) = \frac{l_g \psi}{\mu_0 A} + l_cH(\psi) - NI = 0
+			\end{equation}
+			
+			Plug in the numbers, we can finalize the equation by calculating all the coefficients of the polynomial, shown in Equation \ref{final_mmf}.
+			\begin{equation}
+				f(\psi) = 3.979\times 10^{7}\psi + 0.3H(\psi) - 8000
+				\label{final_mmf}
+			\end{equation}
 	\newpage
 	\onecolumn
 	\begin{appendices}
