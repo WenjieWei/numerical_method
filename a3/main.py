@@ -1,6 +1,8 @@
 from polynomial import Polynomial, LagrangePolynomial
+from matrix import Matrix
 from interpolation import lagrange_full_domain, cubic_hermite, piecewise_linear_interpolate
-from nonlinear import calc_newton_raphson, calc_successive_subs, calc_diode
+from nonlinear import calc_newton_raphson, calc_successive_subs
+from nonlinear import calc_f1, calc_f2, calc_jacobian, calc_norm_vec
 import matplotlib.pyplot as plt
 import csv, os
 
@@ -151,4 +153,42 @@ if __name__ == "__main__":
     # Start of Q2
     # ====== Part b ======
     print(" ====== Q2, Part b ====== ")
-    calc_diode()
+    # This part calculates the nodal voltages specifically for this problem
+    # r is the resistance of the resistor
+    # e is the voltage provided by the source
+    # isa is the reverse saturation current of diode A
+    # isb is the reverse saturation current of diode B
+    # ktq is the ratio of kT/q, which is 25mV.
+    r = 512
+    e = 0.2
+    isa = 0.8e-6
+    isb = 1.1e-6
+    ktq = 0.025
+    voltages = Matrix([[0], [0]], 2, 1)
+
+    f1_list = [0]
+    f2_list = [0]
+    err_list = [0]
+    epsilon = 1e-6
+
+    iterations = 1
+    f_mat = Matrix([[0], [0]], 2, 1)
+    jacobian, inv_jacobian = calc_jacobian(voltages)
+
+    f_mat[0][0] = calc_f1(voltages)
+    f_mat[1][0] = calc_f2(voltages)
+    f_0 = f_mat.clone()
+
+    while calc_norm_vec(f_mat) / calc_norm_vec(f_0) >= epsilon:
+        voltages = voltages - jacobian.inv() * f_mat
+        jacobian, inv_jacobian = calc_jacobian(voltages)
+        f1 = calc_f1(voltages)
+        f2 = calc_f2(voltages)
+
+        v1 = voltages[0][0]
+        v2 = voltages[1][0]
+
+        f1_list.append(f1)
+        f2_list.append(f2)
+        f_mat[0][0] = f1
+        f_mat[1][0] = f2

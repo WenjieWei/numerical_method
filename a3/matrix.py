@@ -34,7 +34,19 @@ class Matrix(object):
         transposed_matrix = Matrix(vec_trans, self.cols, self.rows)
         return transposed_matrix
 
-    def minus(self, other):
+    def __add__(self, other):
+        if self.cols != other.cols or self.rows != other.rows:
+            raise ValueError("Incorrect dimension for matrix subtraction.")
+
+        result_vec = [[None for _ in range(self.cols)] for _ in range(self.rows)]
+        result = Matrix(result_vec, self.rows, self.cols)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                result[i][j] = self[i][j] + other[i][j]
+
+        return result
+
+    def __sub__(self, other):
         if self.cols != other.cols or self.rows != other.rows:
             raise ValueError("Incorrect dimension for matrix subtraction.")
 
@@ -46,7 +58,10 @@ class Matrix(object):
 
         return result
 
-    def dot_product(self, other):
+    def minus(self, other):
+        return self - other
+
+    def __mul__(self, other):
         if self.cols != other.rows:
             raise ValueError("Incorrect dimension for matrix multiplication.")
 
@@ -62,6 +77,9 @@ class Matrix(object):
 
         return result
 
+    def dot_product(self, other):
+        return self * other
+
     def det(self):
         if self.cols > 2 or self.rows > 2:
             raise ValueError("I cannot calculate determinants with dimensions over 2!")
@@ -72,6 +90,10 @@ class Matrix(object):
         return 1 / (self[0][0] * self[1][1] - self[0][1] * self[1][0])
 
     def inv(self):
+        """
+
+        :rtype: Matrix
+        """
         if self.cols > 2 or self.rows > 2:
             raise ValueError("I cannot calculate inverse with dimensions over 2!")
 

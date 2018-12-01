@@ -1,7 +1,14 @@
 from polynomial import Polynomial
+from matrix import Matrix
+import math
 
 TOLERANCE = 1e-6
 MAX_ITERATIONS = 1000
+r = 512
+e = 0.2
+isa = 0.8e-6
+isb = 1.1e-6
+ktq = 0.025
 
 
 def calc_newton_raphson(equation, data_x, data_y):
@@ -99,11 +106,38 @@ def calc_successive_subs(equation, data_x, data_y):
         return k, flux_list
 
 
-def calc_diode():
-    R = 512
-    E = 0.2
-    IsA = 0.8e-6
-    IsB = 1.1e-6
-    kT_q = 0.025
+def calc_jacobian(voltages):
+    if not isinstance(voltages, Matrix):
+        raise ValueError("The input must be the list of V1 and V2.")
 
-    
+    j_vec = [[0, 0], [0, 0]]
+    jacobian = Matrix(j_vec, 2, 2)
+
+    jacobian[0][0] = - 1 / r - (isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq))
+    jacobian[0][1] = isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq)
+    jacobian[1][0] = jacobian[0][1]
+    jacobian[1][1] = isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq) \
+                     - isb / ktq * math.exp(voltages[1][0] / ktq)
+
+    inv_jacobian = jacobian.inv()
+
+    return jacobian, inv_jacobian
+
+
+def calc_f1(voltages):
+    return (e - voltages[0][0]) / r - isa * (math.exp((voltages[0][0] - voltages[1][0]) / ktq) - 1)
+
+
+def calc_f2(voltages):
+    return isa * (math.exp((voltages[0][0] - voltages[1][0]) / ktq) - 1) - isb * (math.exp(voltages[1][0] / ktq) - 1)
+
+
+def calc_norm_vec(vector):
+    if vector.cols > 1:
+        raise ValueError("The vector must be a one-column one!")
+
+    result = 0
+    for i in range(vector.rows):
+        result += pow(vector[i][0], 2)
+
+    return result
