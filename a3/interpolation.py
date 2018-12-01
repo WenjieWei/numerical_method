@@ -1,6 +1,8 @@
 from polynomial import Polynomial, LagrangePolynomial
 
 
+TOLERANCE = 1e-6
+
 def lagrange_full_domain(xr, y, points=None):
     """
     This is the method for the lagrange full domain interpolation.
@@ -29,7 +31,7 @@ def lagrange_full_domain(xr, y, points=None):
     return result_polynomial
 
 
-def cubit_hermite(xr, y, slopes):
+def cubic_hermite(xr, y, slopes):
     result = Polynomial([0])
 
     for j in range(len(xr)):
@@ -56,3 +58,15 @@ def cubit_hermite(xr, y, slopes):
         result += uj * aj_poly + vj * bj_poly
 
     return result
+
+def piecewise_linear_interpolate(xr, y):
+    polynomials = []
+
+    for i in range(1, len(xr)):
+        a = (y[i] - y[i - 1]) / (xr[i] - xr[i - 1])
+        b = y[i] - a * xr[i]
+
+        temp_poly = Polynomial([b, a])
+        polynomials.append(temp_poly)
+
+    return polynomials
