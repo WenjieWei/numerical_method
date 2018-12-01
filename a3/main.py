@@ -1,6 +1,6 @@
 from polynomial import Polynomial, LagrangePolynomial
 from interpolation import lagrange_full_domain, cubic_hermite, piecewise_linear_interpolate
-from nonlinear import calc_newton_raphson
+from nonlinear import calc_newton_raphson, calc_successive_subs
 import matplotlib.pyplot as plt
 import csv, os
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     curve_plot(poly, filename, 200, H, B)
 
     # ====== Part b ======
-    print(" ====== Q1, Part b =======")
+    print(" ====== Q1, Part b ======")
     H = [0.0, 540.6, 1062.8, 8687.4, 13924.3, 22650.2]
     B = [0.0, 1.3, 1.4, 1.7, 1.8, 1.9]
     poly = lagrange_full_domain(H, B)
@@ -140,4 +140,9 @@ if __name__ == "__main__":
     plot_piecewise(filename, piece_poly_list, B, H)
 
     # Calculate Newton Raphson
-    calc_newton_raphson(piece_poly_list, B, H)
+    iterations, flux_list = calc_newton_raphson(piece_poly_list, B, H)
+    print("number of iterations = %d, final flux = %.8f" % (iterations, flux_list[len(flux_list) - 1]))
+
+    # ====== Part f ======
+    print(" ====== Q1, Part f ====== ")
+    iterations, flux_list = calc_successive_subs(piece_poly_list, B, H)
