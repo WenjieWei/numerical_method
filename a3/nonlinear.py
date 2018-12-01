@@ -9,6 +9,7 @@ def calc_newton_raphson(equation, data_x, data_y):
     calculates the newton raphson
     :param equation: either a polynomial or a list of piecewise linear polynomials
     :param data_x: the list of data on the x axis
+    :param data_y: the list of data on the y axis
     :return: number of iterations and the final result
     """
     if isinstance(equation, list):
@@ -66,14 +67,12 @@ def calc_successive_subs(equation, data_x, data_y):
         k = 0
         flux = 0
         convergent = False
-        fk = -8000e-9
-        prev_fk = -8000e-9
+        f0 = -8000 * 5e-9
+        fk = -8000 * 5e-9
 
         while not convergent:
-            if abs(fk / prev_fk) < TOLERANCE or k >= MAX_ITERATIONS:
-                convergent = True
+            if abs(fk / f0) < TOLERANCE or k >= MAX_ITERATIONS:
                 break
-            prev_fk = fk
             # Find the piecewise polynomial segment of the current flux
             for i in range(1, len(data_x)):
                 if data_x[i - 1] <= (flux / area) < data_x[i]:
@@ -94,7 +93,17 @@ def calc_successive_subs(equation, data_x, data_y):
             fk /= 5e9
 
             k += 1
-            flux = flux - fk
+            flux -= fk
             flux_list.append(flux)
 
         return k, flux_list
+
+
+def calc_diode():
+    R = 512
+    E = 0.2
+    IsA = 0.8e-6
+    IsB = 1.1e-6
+    kT_q = 0.025
+
+    

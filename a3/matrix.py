@@ -62,6 +62,31 @@ class Matrix(object):
 
         return result
 
+    def det(self):
+        if self.cols > 2 or self.rows > 2:
+            raise ValueError("I cannot calculate determinants with dimensions over 2!")
+
+        if self.cols != self.rows:
+            raise ValueError("The matrix must be square to calculate the determinant!")
+
+        return 1 / (self[0][0] * self[1][1] - self[0][1] * self[1][0])
+
+    def inv(self):
+        if self.cols > 2 or self.rows > 2:
+            raise ValueError("I cannot calculate inverse with dimensions over 2!")
+
+        if self.cols != self.rows:
+            raise ValueError("The matrix must be square to calculate the inverse!")
+
+        result_mat = Matrix([[0, 0], [0, 0]], 2, 2)
+        det = self.det()
+        result_mat[0][0] = self[1][1] * det
+        result_mat[1][1] = self[0][0] * det
+        result_mat[0][1] = -self[0][1] * det
+        result_mat[1][0] = -self[1][0] * det
+
+        return result_mat
+
     def __getitem__(self, item_number):
         if isinstance(item_number, int):
             return self._vec[item_number]

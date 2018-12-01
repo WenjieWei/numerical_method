@@ -1,6 +1,6 @@
 from polynomial import Polynomial, LagrangePolynomial
 from interpolation import lagrange_full_domain, cubic_hermite, piecewise_linear_interpolate
-from nonlinear import calc_newton_raphson, calc_successive_subs
+from nonlinear import calc_newton_raphson, calc_successive_subs, calc_diode
 import matplotlib.pyplot as plt
 import csv, os
 
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     # ====== Part e ======
     print(" ====== Q1, Part e ======")
     # Find the piecewise interpolated polynomial
-    filename = "Piecewise Polynomial"
+    filename = "Piecewise_Polynomial"
     B, H = read_BH_file('M19_BH.csv')
     piece_poly_list = piecewise_linear_interpolate(B, H)
     print("Printing the piecewise polynomials...")
@@ -146,3 +146,9 @@ if __name__ == "__main__":
     # ====== Part f ======
     print(" ====== Q1, Part f ====== ")
     iterations, flux_list = calc_successive_subs(piece_poly_list, B, H)
+    print("number of iterations = %d, final flux = %.8f" % (iterations, flux_list[len(flux_list) - 1]))
+
+    # Start of Q2
+    # ====== Part b ======
+    print(" ====== Q2, Part b ====== ")
+    calc_diode()
