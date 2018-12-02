@@ -116,7 +116,7 @@ def calc_jacobian(voltages):
     jacobian[0][0] = - 1 / r - (isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq))
     jacobian[0][1] = isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq)
     jacobian[1][0] = jacobian[0][1]
-    jacobian[1][1] = isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq) \
+    jacobian[1][1] = - isa / ktq * math.exp((voltages[0][0] - voltages[1][0]) / ktq) \
                      - isb / ktq * math.exp(voltages[1][0] / ktq)
 
     inv_jacobian = jacobian.inv()

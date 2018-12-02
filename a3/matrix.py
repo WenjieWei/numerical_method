@@ -122,7 +122,11 @@ class Matrix(object):
                 return self._vec[x][y]
 
     def clone(self):
-        cloned_matrix = Matrix(self.vec, self.rows, self.cols)
+        cloned_vec = []
+        for i in range(len(self.vec)):
+            cloned_vec.append(self.vec[i])
+
+        cloned_matrix = Matrix(cloned_vec, self.rows, self.cols)
         return cloned_matrix
 
     def print_matrix(self):

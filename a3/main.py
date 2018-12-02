@@ -171,24 +171,44 @@ if __name__ == "__main__":
     err_list = [0]
     epsilon = 1e-6
 
-    iterations = 1
+    iterations = 0
     f_mat = Matrix([[0], [0]], 2, 1)
     jacobian, inv_jacobian = calc_jacobian(voltages)
 
     f_mat[0][0] = calc_f1(voltages)
     f_mat[1][0] = calc_f2(voltages)
-    f_0 = f_mat.clone()
+    f_0 = Matrix([[f_mat[0][0]], [f_mat[1][0]]], 2, 1)
+    err = calc_norm_vec(f_mat) / calc_norm_vec(f_0)
 
-    while calc_norm_vec(f_mat) / calc_norm_vec(f_0) >= epsilon:
-        voltages = voltages - jacobian.inv() * f_mat
-        jacobian, inv_jacobian = calc_jacobian(voltages)
-        f1 = calc_f1(voltages)
-        f2 = calc_f2(voltages)
+    convergent = False
+    with open("diode_circuit_NR.csv", 'w', newline='') as csv_file:
+        row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
+        row_writer.writerow(['iter', '$V_1$', '$V_2$', '$f_1$', '$f_2$', 'err'])
+        print("k\tV_1 \tV_2 \tf_1 \tf_2 \terr")
 
-        v1 = voltages[0][0]
-        v2 = voltages[1][0]
+        while not convergent:
+            err = calc_norm_vec(f_mat) / calc_norm_vec(f_0)
+            err_list.append(err)
+            row_writer.writerow([str(iterations), str(voltages[0][0]), str(voltages[1][0]),
+                                 str(f_mat[0][0]), str(f_mat[1][0]), str(err)])
+            print("%d %.8f %.8f %.8f %.8f %.8f"
+                  % (iterations, voltages[0][0], voltages[1][0], f_mat[0][0], f_mat[1][0], err))
+            iterations += 1
+            voltages = voltages - jacobian.inv() * f_mat
+            jacobian, inv_jacobian = calc_jacobian(voltages)
+            f1 = calc_f1(voltages)
+            f2 = calc_f2(voltages)
 
-        f1_list.append(f1)
-        f2_list.append(f2)
-        f_mat[0][0] = f1
-        f_mat[1][0] = f2
+            v1 = voltages[0][0]
+            v2 = voltages[1][0]
+
+            f1_list.append(f1)
+            f2_list.append(f2)
+            f_mat[0][0] = f1
+            f_mat[1][0] = f2
+
+            if abs(calc_norm_vec(f_mat) / calc_norm_vec(f_0)) < epsilon:
+                convergent = True
+
+    # ====== Q3 ======
+    print(" ====== Q3, Part a ====== ")
