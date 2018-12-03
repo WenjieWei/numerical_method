@@ -282,9 +282,65 @@
 	\section{Gauss-Legendre Integration}
 		The implementation of the one-point Gauss-Legendre Integration is shown in Listing \ref{lst:inte}.
 		
-		The implementation of the algorithm is straight forward. The function requires the target function, the lower and upper limit, and number of rectangular segments to be used. 
+		The implementation has been straight forward. The function requires the target function, the lower and upper limit, and number of rectangular segments to be used. The function also requires an input of the real value calculated by \MATLAB, and the function returns the result of the integration, as well as the absolute error. 
+		
+		The integration performs if the width of each rectangular segment $\zeta$ is provided. The algorithm performs an integration following the equation below:
+		\begin{equation}
+			\int_{x_0}^{x_1}f(x)dx \approx \sum_{i = 1}^{n} \zeta_i f(x_0 + \frac{\zeta_i}{2})
+		\end{equation}
+		where $x_0$ is the central value of each rectangular segment. 
+		
 		\subsection{One-Point Gauss-Legendre Integration of $sin(x)$}
+			The one-point Gauss-Legendre integration is firstly tested using a sine function from 0 to 1. The real value passed into the function is 0.4597, which was calculated by \MATLAB. The program is tested with different number of rectangle segments, varying from 1 to 20. The plot of the absolute error on the log scale is shown in Figure \ref{sine_err}.
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=\linewidth]{../data/sine_err_int}
+				\caption{Absolute Error of $\int_{0}^{1}sin(x)dx$}
+				\label{sine_err}
+			\end{figure}
+		
+			The plot shows a straight line of the absolute error on the logarithm scale. The straight line indicates a first-order Gauss-Legendre integration
+		\subsection{One-Point Gauss-Legendre Integration of $ln(x)$}
+			The one-point Gauss-Legendre integration is then used to calculate $\int_{0}^{1} ln(x)dx$. Since the one-point Gauss-Legendre methods uses the value on the right of the rectangular segment, integrating the logarithm function from 0 will not produce the problem of an undefined number.
 			
+			The test for the logarithm uses 10 to 200 rectangular segments for the integration. Similar to the sine function test, the real value -1 is used for the calculation of absolute errors, and the plot for the errors on the logarithm scale is shown in Figure \ref{log_err_int}.
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=\linewidth]{../data/ln_err_int}
+				\caption{Plot of Absolute Errors on Log Scale for the Logarithm Function}
+				\label{log_err_int}
+			\end{figure}
+		
+			Similar to the sine function, the straight line of the error plot indicates the use of one-point Gauss-Legendre integration, and it can also be seen that with more rectangular segments used, the error is reduced to achieve higher accuracy. 
+			
+		\subsection{One-Point Integration Test for $\int_{0}^{1}ln(0.2|sin(x)|)dx$}
+			The tricky part for this problem is to perform a substitution to do the integration. By substituting $0.2sin(x)$ by $u$, we can obtain a new integration function below:
+			$$
+				\int_{0}^{1}ln(0.2|sin(x)|)dx = \int_{0}^{0.2sin(1)} \frac{ln(u)}{\sqrt{0.04 - u^2}}du
+			$$
+			
+			By performing the new integration with 10 to 200 rectangular segments, we obtain a new plot shown in Figure \ref{ln_sin_err}.
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=\linewidth]{../data/ln_sine_err_int}
+				\caption{Plot on Absolute Errors of the New Integral}
+				\label{ln_sin_err}
+			\end{figure}
+		
+			The logarithm calculations returns a plot with a similar behavior comparing with the plots shown in the previous sections. 
+			
+		\subsection{Varying Segment Width}
+			The fixed-width integration does not give a good approximation when the rate of change of the function is high at certain domain. Therefore, if the width could be varied according to the rate of change, the result of the integration will become more accurate. 
+			
+			In the function implemented for this problem, using a ten-segment integration, I manually decided a width ratio of $[1:2:3:\cdots:9:10]$ for the ten rectangular segments. The testing result of such modification is shown in Figure \ref{mod_width} below:
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=\linewidth]{width_mod}
+				\caption{Testing Result of the Modification}
+				\label{mod_width}
+			\end{figure}
+		
+			The testing result shows that with a varying width, the integration approximation becomes much more accurate comparing to the fixed-width integration approximation. 
 		
 	\newpage
 	\onecolumn
