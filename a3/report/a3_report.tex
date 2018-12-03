@@ -280,7 +280,11 @@
 			From the plot, we can show the convergence to be quadratic. 
 			
 	\section{Gauss-Legendre Integration}
+		The implementation of the one-point Gauss-Legendre Integration is shown in Listing \ref{lst:inte}.
 		
+		The implementation of the algorithm is straight forward. The function requires the target function, the lower and upper limit, and number of rectangular segments to be used. 
+		\subsection{One-Point Gauss-Legendre Integration of $sin(x)$}
+			
 		
 	\newpage
 	\onecolumn
@@ -304,6 +308,11 @@
 			\captionof{listing}{Newton Raphson (\texttt{nonlinear.py}).}
 			\inputminted{python}{../nonlinear.py}
 			\label{lst:nonlinear}
+		\end{center}
+		\begin{center}
+			\captionof{listing}{Gauss-Legendre Integration (\texttt{integration.py}).}
+			\inputminted{python}{../integration.py}
+			\label{lst:inte}
 		\end{center}
 	\end{appendices}
 \end{document}

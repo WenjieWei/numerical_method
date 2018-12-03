@@ -3,7 +3,7 @@ from matrix import Matrix
 from interpolation import lagrange_full_domain, cubic_hermite, piecewise_linear_interpolate
 from nonlinear import calc_newton_raphson, calc_successive_subs
 from nonlinear import calc_f1, calc_f2, calc_jacobian, calc_norm_vec
-from integration import gauss_legendre_integration, nested_integration
+from integration import gauss_legendre_integration, nested_integration, modified_width, modified_width_nested_integration
 
 from math import sin, log, log10
 import matplotlib.pyplot as plt
@@ -277,3 +277,24 @@ if __name__ == "__main__":
     plot_int_err(error_list, segments, filename)
 
     print(" ====== Q3, Part d ====== ")
+    filename = 'ln_err_int_modified_width.png'
+    real_value = -1
+    N = 10
+    integral, err1 = gauss_legendre_integration(log, 0, 1, N, real_value)
+    integral_mod, err2 = modified_width(log, 0, 1, N, real_value)
+
+    print("Integration result of ln(x) for fixed width and modified width:")
+    print("fixed\t modified")
+    print("%.8f, %.8f" % (integral, integral_mod))
+    print("errors:")
+    print("%.8f, %.8f" % (err1, err2))
+
+    real_value = -2.666
+    integral, err1 = nested_integration(0, 0.2 * sin(1), N, real_value)
+    integral_mod, err2 = modified_width_nested_integration(0, 0.2 * sin(1), N, real_value)
+
+    print("\nIntegration result of ln(0.2|sin(x)|) for fixed width and modified width:")
+    print("fixed\t modified")
+    print("%.8f, %.8f" % (integral, integral_mod))
+    print("errors:")
+    print("%.8f, %.8f" % (err1, err2))
