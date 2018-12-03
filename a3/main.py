@@ -3,6 +3,9 @@ from matrix import Matrix
 from interpolation import lagrange_full_domain, cubic_hermite, piecewise_linear_interpolate
 from nonlinear import calc_newton_raphson, calc_successive_subs
 from nonlinear import calc_f1, calc_f2, calc_jacobian, calc_norm_vec
+from integration import gauss_legendre_integration, nested_integration
+
+from math import sin, log, log10
 import matplotlib.pyplot as plt
 import csv, os
 
@@ -40,6 +43,25 @@ def calc_slope(X, Y, target):
     slope.append(result)
 
     return slope
+
+
+def plot_int_err(err_list, range_list, filename):
+    print("Printing Error v.s. Segment Number.")
+    err_list_log = []
+    range_list_log = []
+    for i in range(len(err_list)):
+        err_list_log.append(log10(err_list[i]))
+        range_list_log.append(log10(range_list[i]))
+
+    plt.plot(range_list_log, err_list_log)
+    plt.xlabel('log(N)')
+    plt.ylabel('log(E)')
+    plt.title('log(E) v.s. log(N)')
+    plt.grid(True)
+
+    plt.savefig(filename)
+    plt.close()
+    print("Plot has been saved to " + str(os.getcwd()) + "/" + filename)
 
 
 def curve_plot(poly, filename, up, data_x, data_y):
@@ -212,3 +234,46 @@ if __name__ == "__main__":
 
     # ====== Q3 ======
     print(" ====== Q3, Part a ====== ")
+    filename = 'sine_err_int.png'
+    real_value = 0.45970
+    integral_list = []
+    error_list = []
+    segments = []
+    for i in range(1, 21):
+        integral, err = gauss_legendre_integration(sin, 0, 1, i, real_value)
+        integral_list.append(integral)
+        error_list.append(err)
+        segments.append(i)
+
+    plot_int_err(error_list, segments, filename)
+
+    print(" ====== Q3, Part b ====== ")
+    filename = 'ln_err_int.png'
+    real_value = -1
+    integral_list = []
+    error_list = []
+    segments = []
+    for i in range(10, 200):
+        integral, err = gauss_legendre_integration(log, 0, 1, i, real_value)
+        integral_list.append(integral)
+        error_list.append(err)
+        segments.append(i)
+
+    plot_int_err(error_list, segments, filename)
+
+    print(" ====== Q3, Part c ====== ")
+    filename = 'ln_sine_err_int.png'
+    real_value = -2.666
+    integral_list = []
+    error_list = []
+    segments = []
+    upper_limit = 0.2 * sin(1)
+    for i in range(10, 200):
+        integral, err = nested_integration(0, upper_limit, i, real_value)
+        integral_list.append(integral)
+        error_list.append(err)
+        segments.append(i)
+
+    plot_int_err(error_list, segments, filename)
+
+    print(" ====== Q3, Part d ====== ")
