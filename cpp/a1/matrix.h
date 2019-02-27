@@ -19,8 +19,8 @@ public:
     //Matrix properties
     int get_rows(void); // Return the number of rows of the matrix.
     int get_cols(void); // Return the number of columns of the matrix.
-    double value_at(int row, int col); // Return the specific value at one point.
-    void set_value_at(double value, int row, int col);
+    double valueAt(int row, int col); // Return the specific value at one point.
+    void setValueAt(double value, int row, int col);
     bool isSquare(void); // Returns true if the matrix is a square matrix.
     bool isSymmetric(void); // Returns true if the matrix is symmetric.
 

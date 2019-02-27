@@ -75,7 +75,7 @@ int Matrix::get_cols(void){
  *  Args: the row number and column number.
  *  Returns: double value indicating the number.
  */
-double Matrix::value_at(int row, int col){
+double Matrix::valueAt(int row, int col){
     double value;
 
     try{
@@ -113,7 +113,7 @@ bool Matrix::isSquare(void){
   *  Argument: value, row and column
   *  Return: void
   */
-void Matrix::set_value_at(double value, int row, int col){
+void Matrix::setValueAt(double value, int row, int col){
     try{
         mat_vec.at(row).at(col) = value;
     } catch (const std::out_of_range& e){
@@ -142,7 +142,7 @@ Matrix Matrix::plus(Matrix adder){
 
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
-            result.set_value_at((mat_vec[i][j] + adder.value_at(i, j)), i, j);
+            result.setValueAt((mat_vec[i][j] + adder.valueAt(i, j)), i, j);
         }
     }
 
@@ -170,7 +170,7 @@ Matrix Matrix::subs(Matrix substractor){
 
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
-            result.set_value_at((mat_vec[i][j] - substractor.value_at(i, j)), i, j);
+            result.setValueAt((mat_vec[i][j] - substractor.valueAt(i, j)), i, j);
         }
     }
 
@@ -200,10 +200,10 @@ Matrix Matrix::dot_product(Matrix multiplier){
         for(int j = 0; j < multiplier.get_cols(); j++){
             double sum = 0;
             for(int k = 0; k < multiplier.get_rows(); k++){
-                sum += mat_vec[i][k] * multiplier.value_at(k, j);
+                sum += mat_vec[i][k] * multiplier.valueAt(k, j);
             }
 
-            result.set_value_at(sum, i, j);
+            result.setValueAt(sum, i, j);
         }
     }
 
@@ -226,7 +226,7 @@ Matrix Matrix::transpose(void){
 
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
-            result.set_value_at(mat_vec[i][j], j, i);
+            result.setValueAt(mat_vec[i][j], j, i);
         }
     }
 
@@ -246,8 +246,9 @@ Matrix Matrix::clone(void){
             result_vec[i][j] = mat_vec[i][j];
         }
     }
+    Matrix result = Matrix(result_vec);
 
-    return new Matrix(result_vec);
+    return result;
 }
 
 

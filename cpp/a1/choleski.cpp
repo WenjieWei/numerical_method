@@ -23,7 +23,7 @@ Matrix decomposition(Matrix A){
     Matrix L = Matrix(empty_vec);
 
     for(int j = 0; j < n; j++){
-        if(A.value_at(j, j) <= 0){
+        if(A.valueAt(j, j) <= 0){
             throw "Matrix is not positive definite!\n";
         }
 
