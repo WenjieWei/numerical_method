@@ -55,7 +55,7 @@ Matrix::Matrix(vector<vector<double>> vec){
  *  Args: void.
  *  Returns: int value indicating the number of rows in the matrix.
  */
-int Matrix::get_rows(void){
+int Matrix::getRows(void){
     return rows;
 }
 
@@ -65,7 +65,7 @@ int Matrix::get_rows(void){
  *  Args: void.
  *  Returns: int value indicating the number of columns in the matrix.
  */
-int Matrix::get_cols(void){
+int Matrix::getCols(void){
     return cols;
 }
 
@@ -129,7 +129,7 @@ void Matrix::setValueAt(double value, int row, int col){
  */
 Matrix Matrix::plus(Matrix adder){
     vector<vector<double>> result_vec;
-    if(adder.get_rows() != rows || adder.get_cols() != cols)
+    if(adder.getRows() != rows || adder.getCols() != cols)
         throw "Matrix dimensions do not agree!\n";
     else{
         result_vec.resize(rows);
@@ -157,7 +157,7 @@ Matrix Matrix::plus(Matrix adder){
  */
 Matrix Matrix::subs(Matrix substractor){
     vector<vector<double>> result_vec;
-    if(substractor.get_rows() != rows || substractor.get_cols() != cols){
+    if(substractor.getRows() != rows || substractor.getCols() != cols){
         throw "Matrix dimensions do not agree!\n";
     } else {
         result_vec.resize(rows);
@@ -183,23 +183,23 @@ Matrix Matrix::subs(Matrix substractor){
  *  Args: the substractor matrix.
  *  Retval: the result matrix.
  */
-Matrix Matrix::dot_product(Matrix multiplier){
+Matrix Matrix::dotProduct(Matrix multiplier){
     vector<vector<double>> result_vec;
-    if(multiplier.get_rows() != cols || multiplier.get_cols() != rows){
+    if(multiplier.getRows() != cols || multiplier.getCols() != rows){
         throw "Matrix dimensions do not agree!\n";
     } else {
         result_vec.resize(cols);
         for(int i = 0; i < cols; i++){
-            result_vec[i].resize(multiplier.get_cols());
+            result_vec[i].resize(multiplier.getCols());
         }
     }
 
     Matrix result = Matrix(result_vec);
 
     for(int i = 0; i < rows; i++){
-        for(int j = 0; j < multiplier.get_cols(); j++){
+        for(int j = 0; j < multiplier.getCols(); j++){
             double sum = 0;
-            for(int k = 0; k < multiplier.get_rows(); k++){
+            for(int k = 0; k < multiplier.getRows(); k++){
                 sum += mat_vec[i][k] * multiplier.valueAt(k, j);
             }
 
