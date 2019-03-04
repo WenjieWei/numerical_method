@@ -507,4 +507,5 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+.a.out
 >>>>>>> 72277adb0d060d53461c12e12df964bd0fcb513f
