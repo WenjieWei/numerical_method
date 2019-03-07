@@ -185,12 +185,12 @@ Matrix Matrix::subs(Matrix substractor){
  */
 Matrix Matrix::dotProduct(Matrix multiplier){
     vector<vector<double>> result_vec;
-    if(multiplier.getRows() != cols || multiplier.getCols() != rows){
+    if(multiplier.getRows() != cols){
         throw "Matrix dimensions do not agree!\n";
     } else {
-        result_vec.resize(cols);
-        for(int i = 0; i < cols; i++){
-            result_vec[i].resize(multiplier.getCols());
+        result_vec.resize(rows);
+        for(int i = 0; i < rows; i++){
+            result_vec[i].resize(cols);
         }
     }
 

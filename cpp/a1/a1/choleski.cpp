@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <stdexcept>
 #include "matrix.h"
 #include "choleski.h"
 
@@ -47,6 +48,7 @@ Matrix bwdSubstitution(Matrix L, Matrix y){
  *      y: the eliminated vector.
  */
 Matrix fwdElimination(Matrix L, Matrix b){
+    double tempSum, tempProd, entry;
     int n = L.getRows();
     vector<vector<double>> yVec(n);
     for(int i = 0; i < n; i++){
@@ -55,9 +57,9 @@ Matrix fwdElimination(Matrix L, Matrix b){
     Matrix y = Matrix(yVec);
 
     for(int i = 0; i < y.getRows(); i++){
-        double tempSum = 0;
-        double tempProd = 0;
-        double entry = 0;
+        tempSum = 0;
+        tempProd = 0;
+        entry = 0;
 
         if (i > 0){
             for(int j = 0; j < i; j++){
@@ -65,7 +67,10 @@ Matrix fwdElimination(Matrix L, Matrix b){
                 tempSum += tempProd;
             }
             entry = (b.valueAt(i, 0) - tempSum) / L.valueAt(i, i);
-            y.setValueAt(entry, j, 0);
+            y.setValueAt(entry, i, 0);
+        } else {
+            entry = b.valueAt(i, 0) / L.valueAt(i, i);
+            y.setValueAt(entry, i, 0);
         }
     }
 
@@ -82,30 +87,35 @@ Matrix fwdElimination(Matrix L, Matrix b){
  */
 Matrix decomposite(Matrix A){
     int n = A.getRows();
+    double tempSum;
 	// Obtain the number of rows in the matrix.
 
     vector<vector<double>> empty_vec(n);
     for(int i = 0; i < empty_vec.size(); i++){
-        empty_vec[i].resize(1);
+        empty_vec[i].resize(n);
     }
     Matrix L = Matrix(empty_vec);
 
 	// Loop through every row in the matrix. j is the row number.
     for(int j = 0; j < n; j++){
-        double tempSum = 0;
+        tempSum = 0;
 		// Loop through every column until the diagonal. k is the column number.
 		for (int k = 0; k < j; k++) {
 			// Obtain Ljj.
-			tempSum += pow(A.valueAt(k, j), 2);
+			tempSum += pow(L.valueAt(j, k), 2);
 		}
 
 		double entry = A.valueAt(j, j) - tempSum;
 		if (entry < 0) {
             cout << "Warning: Matrix is not positive definite." << endl;
-			throw "Operand in square root must be greater or equal to 0!";
+			throw invalid_argument("Operand in square root must be greater or equal to 0!");
 		}
-		else {
+
+		try{
 			L.setValueAt(sqrt(entry), j, j);
+		} catch (const exception & e){
+            cout << "Warning: Matrix is not positive definite." << endl;
+			cout << e.what() << endl;
 		}
 
         for(int i = j + 1; i < n; i++){
@@ -114,7 +124,7 @@ Matrix decomposite(Matrix A){
                 tempSum += L.valueAt(i, k) * L.valueAt(j, k);
             }
 
-            entry = (A.valueAt(i, j) - tempSum) / L.valueAt[j][j];
+            entry = (A.valueAt(i, j) - tempSum) / L.valueAt(j, j);
             L.setValueAt(entry, i, j);
         }
     }
