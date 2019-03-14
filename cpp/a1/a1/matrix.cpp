@@ -5,6 +5,42 @@
 using namespace std;
 
 /**
+	The default constructor of the matrix object.
+
+	Initializes: 
+	number of rows = 1;
+	number of columns = 1;
+	only number: 0
+*/
+Matrix::Matrix() {
+	rows = 0;
+	cols = 0;
+
+	vector<vector<double>> mat_vec(1);
+	mat_vec[1].resize(1);
+
+	// Check if the matrix is a square matrix.
+	if (rows == cols) {
+		square = true;
+
+		// Check symmetricity.
+		symmetric = true;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (mat_vec[i][j] != mat_vec[j][i])
+					symmetric = false;
+			}
+		}
+	}
+	else {
+		// If the matrix is not square,
+		// Then it is 100% not symmetric.
+		square = false;
+		symmetric = false;
+	}
+}
+
+/**
  *  The constructor of the Matrix object.
  *  Input argument: vec: 2-D vector of doubles.
  *
@@ -81,7 +117,7 @@ double Matrix::valueAt(int row, int col){
     try{
         value = mat_vec.at(row).at(col);
     } catch (const std::out_of_range& e){
-        cout << "The indices passed in are out of bounds." << endl;
+        cout << "The indices passed in are out of bounds while trying to access " << row << ", " << col << endl;
     }
 
     return value;
@@ -190,7 +226,7 @@ Matrix Matrix::dotProduct(Matrix multiplier){
     } else {
         result_vec.resize(rows);
         for(int i = 0; i < rows; i++){
-            result_vec[i].resize(cols);
+            result_vec[i].resize(multiplier.getCols());
         }
     }
 

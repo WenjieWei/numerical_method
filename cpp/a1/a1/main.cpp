@@ -1,7 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <filesystem>
+#include <Windows.h>
 #include "matrix.h"
 #include "choleski.h"
+#include "linearResistiveNetwork.h"
 
 using namespace std;
 
@@ -9,7 +13,7 @@ int main(int argc, char** argv) {
 	cout << "**** Executing assignment 1 of ECSE 543 ****" << endl;
 	cout << "**** Question 1: Choleski Decomposition ****" << endl;
 	//cout << "Enter the A matrix. Separate row elements by ',' and separate rows by ';'." << endl;
-
+	/*
 	vector<vector<double>> matVec = {
 		{38, 23, 31, 22, 29, 25, 31},
 		{23, 44, 36, 27, 35, 24, 33},
@@ -39,6 +43,27 @@ int main(int argc, char** argv) {
 		cout << "Correct!" << endl;
 	} else {
 		cout << "Incorrect!" << endl;
+	}*/
+	string filename = "tc_1.csv";
+	string filepath = "./circuits/" + filename;
+
+	cout << filepath << endl;
+
+	ifstream infile;
+	infile.open(filepath);
+	if (!infile) {
+		cout << "unable to open file" << endl;
+		exit(1);
+	}
+	else {
+		vector<vector<string>> filetable = readCSV(infile);
+
+		for (int i = 0; i < filetable.size(); i++) {
+			for (int j = 0; j < filetable[i].size(); j++) {
+				cout << filetable[i][j];
+			}
+			cout << endl;
+		}
 	}
 
 	return 0;
