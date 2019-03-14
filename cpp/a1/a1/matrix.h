@@ -14,6 +14,7 @@ private:
     bool square; // Returns true if the matrix is square.
 
 public:
+	Matrix();
     Matrix(vector<vector<double>> vec);
 
     //Matrix properties
