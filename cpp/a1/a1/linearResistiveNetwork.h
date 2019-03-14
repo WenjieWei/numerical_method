@@ -19,16 +19,14 @@ private:
 	Matrix voltageVector;
 	Matrix redResistanceMatrix;
 	Matrix revResistanceMatrix;
-	void readCircuit(std::string filename);
 public:
 	linearResistiveNetwork(std::string filename);
-	
+
 	int getSize(void);
 	Matrix getMatJ(void);
 	Matrix getMatE(void);
 	Matrix getMatY(void);
 	Matrix getMatA(void);
-	Matrix reduceA(void);
 
 	Matrix solveCircuit(void);
 };

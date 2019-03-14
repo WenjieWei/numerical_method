@@ -11,7 +11,7 @@
 using namespace std;
 
 /**
-	This is the constructor for the linear resistive network. 
+	This is the constructor for the linear resistive network.
 	@param: input: the circuit filename to read from.
 */
 linearResistiveNetwork::linearResistiveNetwork(string filename) {
@@ -29,7 +29,7 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 		vector<vector<string>> filetable = readCSV(infile);
 		int tableRow = 0;
 
-		// Create necessary vectors and matrices. 
+		// Create necessary vectors and matrices.
 		circuitId = stoi(filetable[tableRow][0]);
 		branchNumber = stoi(filetable[tableRow][2]);
 		nodeNumber = stoi(filetable[tableRow][4]);
@@ -57,7 +57,7 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 		for (tableRow; tableRow < filetable.size(); tableRow++) {
 			currentVector.setValueAt(stod(filetable[tableRow][2]), branchId, 0);
 			voltageVector.setValueAt(stod(filetable[tableRow][4]), branchId, 0);
-			
+
 			if (stoi(filetable[tableRow][3]) != 0) {
 				revResistanceMatrix.setValueAt((1 / stod(filetable[tableRow][3])), branchId, branchId);
 			}
@@ -72,13 +72,62 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 
 			branchId++;
 		}
-		// NEED TO CREATE REDUCED A MATRIX HERE!!!
+		// Node 0 is grounded by default.
+		// Therefore, remove the first node, i.e. the first row of matrix A
+		// and create a new reduced incidence matrix.
+		vector<vector<double>> reduced_A_vector(nodeNumber - 1);
+		for(int i = 0; i < reduced_A_vector.size(); i++){
+			reduced_A_vector.resize(branchNumber);
+			for(int j = 0; j < branchNumber; j++){
+				reduced_A_vector[i][j] = matA.valueAt(i, j);
+			}
+		}
+		redResistanceMatrix = Matrix(reduced_A_vector);
 	}
 }
 
 
+int linearResistiveNetwork::getSize(void){
+	return size;
+}
+
+Matrix linearResistiveNetwork::getMatJ(void){
+	return currentVector;
+}
+
+Matrix linearResistiveNetwork::getMatE(void){
+	return voltageVector;
+}
+
+Matrix linearResistiveNetwork::getMatY(void){
+	return revResistanceMatrix;
+}
+
+Matrix linearResistiveNetwork::getMatA(void){
+	return redResistanceMatrix;
+}
+
+
 /**
-	This function returns the current working directory. 
+ *	Calculate the final solution of the circuit.
+ *	Calculate matrices A and b based on the information above
+ *	and solve Ax = b.
+ */
+Matrix solveCircuit(void){
+	// First calculate A.
+	Matrix A = redResistanceMatrix.dotProduct(
+		revResistanceMatrix.dotProduct(transpose(redResistanceMatrix)));
+
+	// Calculate b
+	Matrix YE = revResistanceMatrix.dotProduct(voltageVector);
+	Matrix J_YE = currentVector.subs(YE);
+	Matrix B = redResistanceMatrix.dotProduct(J_YE);
+
+	return solve_chol(A, B);
+}
+
+/**
+	This function returns the current working directory.
 
 	@param: arg: void
 	@param: return:string
