@@ -27,7 +27,52 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 	}
 	else {
 		vector<vector<string>> filetable = readCSV(infile);
+		int tableRow = 0;
 
+		// Create necessary vectors and matrices. 
+		circuitId = stoi(filetable[tableRow][0]);
+		branchNumber = stoi(filetable[tableRow][2]);
+		nodeNumber = stoi(filetable[tableRow][4]);
+		size = int(sqrt(nodeNumber));
+		tableRow++;
+
+		int branchId = 0;
+		vector<vector<double>> curVec(branchNumber);
+		vector<vector<double>> volVec(branchNumber);
+
+		vector<vector<double>> incVec(nodeNumber);
+		for (int i = 0; i < nodeNumber; i++) {
+			incVec[i].resize(branchNumber);
+		}
+		vector<vector<double>> revResMat(branchNumber);
+		for (int i = 0; i < branchNumber; i++) {
+			revResMat[i].resize(branchNumber);
+		}
+
+		currentVector = Matrix(curVec); // -> equivalent to J
+		voltageVector = Matrix(volVec); // -> equivalent to E
+		revResistanceMatrix = Matrix(revResMat); // -> equivalent to y
+		Matrix matA = Matrix(incVec); // -> equivalent to A
+
+		for (tableRow; tableRow < filetable.size(); tableRow++) {
+			currentVector.setValueAt(stod(filetable[tableRow][2]), branchId, 0);
+			voltageVector.setValueAt(stod(filetable[tableRow][4]), branchId, 0);
+			
+			if (stoi(filetable[tableRow][3]) != 0) {
+				revResistanceMatrix.setValueAt((1 / stod(filetable[tableRow][3])), branchId, branchId);
+			}
+			else {
+				cout << "Input resistance on branch " << tableRow << " is zero!" << endl;
+				exit(1);
+			}
+
+			// Create un-reduced matrix A
+			matA.setValueAt(1, stoi(filetable[tableRow][0]), branchId);
+			matA.setValueAt(-1, stoi(filetable[tableRow][1]), branchId);
+
+			branchId++;
+		}
+		// NEED TO CREATE REDUCED A MATRIX HERE!!!
 	}
 }
 
