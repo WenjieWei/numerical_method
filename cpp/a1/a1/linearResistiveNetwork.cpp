@@ -17,8 +17,6 @@ const int MAX_PATH = 255;
 linearResistiveNetwork::linearResistiveNetwork(string filename) {
 	string filepath = "./circuits/" + filename;
 
-	cout << filepath << endl;
-
 	ifstream infile;
 	infile.open(filepath);
 	if (!infile) {
@@ -39,9 +37,10 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 		int branchId = 0;
 		vector<vector<double>> curVec(branchNumber);
 		vector<vector<double>> volVec(branchNumber);
-
 		vector<vector<double>> incVec(nodeNumber);
-		for (int i = 0; i < nodeNumber; i++) {
+		for (int i = 0; i < nodeNumber; i++){
+			curVec[i].resize(1);
+			volVec[i].resize(1);
 			incVec[i].resize(branchNumber);
 		}
 		vector<vector<double>> revResMat(branchNumber);
@@ -54,7 +53,7 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 		revResistanceMatrix = Matrix(revResMat); // -> equivalent to y
 		Matrix matA = Matrix(incVec); // -> equivalent to A
 
-		for (tableRow; tableRow < filetable.size(); tableRow++) {
+		for (tableRow = 1; tableRow < filetable.size(); tableRow++) {
 			currentVector.setValueAt(stod(filetable[tableRow][2]), branchId, 0);
 			voltageVector.setValueAt(stod(filetable[tableRow][4]), branchId, 0);
 
@@ -72,6 +71,7 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 
 			branchId++;
 		}
+		
 		// Node 0 is grounded by default.
 		// Therefore, remove the first node, i.e. the first row of matrix A
 		// and create a new reduced incidence matrix.
