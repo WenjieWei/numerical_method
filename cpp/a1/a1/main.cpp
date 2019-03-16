@@ -1,8 +1,8 @@
 #include <iostream>
+#include <istream>
 #include <vector>
 #include <fstream>
-#include <filesystem>
-#include <Windows.h>
+#include <string>
 #include "matrix.h"
 #include "choleski.h"
 #include "linearResistiveNetwork.h"
@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	cout << "**** Executing assignment 1 of ECSE 543 ****" << endl;
 	cout << "**** Question 1: Choleski Decomposition ****" << endl;
 	//cout << "Enter the A matrix. Separate row elements by ',' and separate rows by ';'." << endl;
-	/*
+	
 	vector<vector<double>> matVec = {
 		{38, 23, 31, 22, 29, 25, 31},
 		{23, 44, 36, 27, 35, 24, 33},
@@ -23,7 +23,6 @@ int main(int argc, char** argv) {
 		{25, 24, 34, 15, 32, 37, 36},
 		{31, 33, 45, 27, 39, 36, 65}};
 	Matrix A = Matrix(matVec);
-	A.printMatrix();
 
 	vector<vector<double>> bVec = {
 		{13},
@@ -35,7 +34,6 @@ int main(int argc, char** argv) {
 		{10}
 	};
 	Matrix b = Matrix(bVec);
-	b.printMatrix();
 
 	Matrix x = solve_chol(A, b);
 
@@ -43,20 +41,22 @@ int main(int argc, char** argv) {
 		cout << "Correct!" << endl;
 	} else {
 		cout << "Incorrect!" << endl;
-	}*/
+	}
+	
 	string filename = "tc_1.csv";
 	string filepath = "./circuits/" + filename;
 
 	cout << filepath << endl;
 
-	ifstream infile;
-	infile.open(filepath);
-	if (!infile) {
+	std::filebuf fb;
+
+	if (!fb.open(filepath, std::ios::in)) {
 		cout << "unable to open file" << endl;
 		exit(1);
 	}
 	else {
-		vector<vector<string>> filetable = readCSV(infile);
+		istream in(&fb);
+		vector<vector<string>> filetable = readCSV(in);
 
 		for (int i = 0; i < filetable.size(); i++) {
 			for (int j = 0; j < filetable[i].size(); j++) {
@@ -65,6 +65,9 @@ int main(int argc, char** argv) {
 			cout << endl;
 		}
 	}
+
+	linearResistiveNetwork nwk = linearResistiveNetwork(filename);
+	nwk.solveCircuit();
 
 	return 0;
 }

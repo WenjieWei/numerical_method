@@ -1,7 +1,6 @@
 #ifndef LINEARNETWORK_H
 #define LINEARNETWORK_H
 #include <iostream>
-#include <istream>
 #include <vector>
 #include "matrix.h"
 #include "choleski.h"
@@ -32,6 +31,6 @@ public:
 };
 
 void constructNetwork(int size);
-vector<vector<string>> readCSV(istream &in);
+vector<vector<string>> readCSV(istream& in);
 
 #endif

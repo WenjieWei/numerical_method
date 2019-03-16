@@ -3,12 +3,12 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include <Windows.h>
 #include "matrix.h"
 #include "choleski.h"
 #include "linearResistiveNetwork.h"
 
 using namespace std;
+const int MAX_PATH = 255;
 
 /**
 	This is the constructor for the linear resistive network.
@@ -113,10 +113,10 @@ Matrix linearResistiveNetwork::getMatA(void){
  *	Calculate matrices A and b based on the information above
  *	and solve Ax = b.
  */
-Matrix solveCircuit(void){
+Matrix linearResistiveNetwork::solveCircuit(void){
 	// First calculate A.
 	Matrix A = redResistanceMatrix.dotProduct(
-		revResistanceMatrix.dotProduct(transpose(redResistanceMatrix)));
+		revResistanceMatrix.dotProduct(redResistanceMatrix.transpose()));
 
 	// Calculate b
 	Matrix YE = revResistanceMatrix.dotProduct(voltageVector);
@@ -126,16 +126,6 @@ Matrix solveCircuit(void){
 	return solve_chol(A, B);
 }
 
-/**
-	This function returns the current working directory.
-
-	@param: arg: void
-	@param: return:string
-*/
-string getcwd(void) {
-	char result[_MAX_PATH];
-	return string(result, GetModuleFileName(NULL, result, MAX_PATH));
-}
 
 
 /**
@@ -199,18 +189,17 @@ vector<std::string> readCSVRow(const std::string &row) {
 	return fields;
 }
 
-vector<vector<string>> readCSV(istream &in) {
-	vector<vector<string>> table;
-	string row;
-	while (!in.eof()) {
-		getline(in, row);
-		if (in.bad() || in.fail()) {
-			break;
-		}
-
-		auto fields = readCSVRow(row);
-		table.push_back(fields);
-	}
-
-	return table;
+/// Read CSV file, Excel dialect. Accept "quoted fields ""with quotes"""
+std::vector<std::vector<std::string>> readCSV(std::istream& in) {
+    std::vector<std::vector<std::string>> table;
+    std::string row;
+    while (!in.eof()) {
+        std::getline(in, row);
+        if (in.bad() || in.fail()) {
+            break;
+        }
+        auto fields = readCSVRow(row);
+        table.push_back(fields);
+    }
+    return table;
 }
