@@ -17,6 +17,11 @@
 
 # Generated files
 .idea/**/contentModel.xml
+*.vcxproj
+*.vcxproj.filters
+./cpp/numMethod/.vs/
+.vs/
+.sln
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
