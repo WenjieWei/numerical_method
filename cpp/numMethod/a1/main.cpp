@@ -43,31 +43,33 @@ int main(int argc, char** argv) {
 		cout << "Incorrect!" << endl;
 	}
 	
-	string filename = "tc_1.csv";
-	string filepath = "./circuits/" + filename;
+	cout << "Running circuit simulations for the five test circuits." << endl;
+	for (int i = 1; i <= 5; i++) {
+		string filename = "tc_" + to_string(i) + ".csv";
+		string filepath = "./circuits/" + filename;
 
-	cout << filepath << endl;
+		cout << "Calculating node voltages for circuit " << i << "." << endl;
 
-	std::filebuf fb;
+		std::filebuf fb;
 
-	if (!fb.open(filepath, std::ios::in)) {
-		cout << "unable to open file" << endl;
-		exit(1);
-	}
-	else {
-		istream in(&fb);
-		vector<vector<string>> filetable = readCSV(in);
-
-		for (int i = 0; i < filetable.size(); i++) {
-			for (int j = 0; j < filetable[i].size(); j++) {
-				cout << filetable[i][j];
-			}
-			cout << endl;
+		if (!fb.open(filepath, std::ios::in)) {
+			cout << "unable to open file" << endl;
+			exit(1);
 		}
+		else {
+			istream in(&fb);
+			vector<vector<string>> filetable = readCSV(in);
+
+			for (int i = 0; i < filetable.size(); i++) {
+				for (int j = 0; j < filetable[i].size(); j++) {
+					cout << filetable[i][j] << ", ";
+				}
+				cout << endl;
+			}
+		}
+
+		linearResistiveNetwork nwk = linearResistiveNetwork(filename);
+		nwk.solveCircuit().printMatrix();
 	}
-
-	linearResistiveNetwork nwk = linearResistiveNetwork(filename);
-	nwk.solveCircuit();
-
 	return 0;
 }

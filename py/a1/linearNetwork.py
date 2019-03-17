@@ -183,7 +183,10 @@ if __name__ == "__main__":
         network_constructor(size)
         print("Done.")
     """
+    network = read_circuits("tc_1.csv")
+    network.solve_circuit()
 
+    """
     with open('result.csv', 'w', newline='') as csv_file:
         row_writer = csv.writer(csv_file, delimiter=',', quoting=csv.QUOTE_NONE, escapechar=' ')
         first_row = ['size', '', 'Resistance', 'Time of Calculation']
@@ -218,3 +221,4 @@ if __name__ == "__main__":
                   + str(finish_time_banded - start_time_banded))
             result_arr = [str(size), 'banded', str(resistance), str(finish_time_banded - start_time_banded)]
             row_writer.writerow(r for r in result_arr)
+    """

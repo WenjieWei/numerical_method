@@ -17,7 +17,7 @@ Matrix::Matrix() {
 	cols = 0;
 
 	vector<vector<double>> mat_vec(1);
-	mat_vec[1].resize(1);
+	mat_vec[0].resize(1);
 
 	// Check if the matrix is a square matrix.
 	if (rows == cols) {

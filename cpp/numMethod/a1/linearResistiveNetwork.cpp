@@ -38,14 +38,14 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 		vector<vector<double>> curVec(branchNumber);
 		vector<vector<double>> volVec(branchNumber);
 		vector<vector<double>> incVec(nodeNumber);
-		for (int i = 0; i < nodeNumber; i++){
-			curVec[i].resize(1);
-			volVec[i].resize(1);
+		for (int i = 0; i < nodeNumber; i++) {
 			incVec[i].resize(branchNumber);
 		}
 		vector<vector<double>> revResMat(branchNumber);
 		for (int i = 0; i < branchNumber; i++) {
 			revResMat[i].resize(branchNumber);
+			curVec[i].resize(1);
+			volVec[i].resize(1);
 		}
 
 		currentVector = Matrix(curVec); // -> equivalent to J
@@ -71,15 +71,15 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 
 			branchId++;
 		}
-		
+
 		// Node 0 is grounded by default.
 		// Therefore, remove the first node, i.e. the first row of matrix A
 		// and create a new reduced incidence matrix.
 		vector<vector<double>> reduced_A_vector(nodeNumber - 1);
-		for(int i = 0; i < reduced_A_vector.size(); i++){
-			reduced_A_vector.resize(branchNumber);
-			for(int j = 0; j < branchNumber; j++){
-				reduced_A_vector[i][j] = matA.valueAt(i, j);
+		for (int i = 1; i < matA.getRows(); i++) {
+			reduced_A_vector[i - 1].resize(branchNumber);
+			for (int j = 0; j < branchNumber; j++) {
+				reduced_A_vector[i - 1][j] = matA.valueAt(i, j);
 			}
 		}
 		redResistanceMatrix = Matrix(reduced_A_vector);
@@ -87,23 +87,23 @@ linearResistiveNetwork::linearResistiveNetwork(string filename) {
 }
 
 
-int linearResistiveNetwork::getSize(void){
+int linearResistiveNetwork::getSize(void) {
 	return size;
 }
 
-Matrix linearResistiveNetwork::getMatJ(void){
+Matrix linearResistiveNetwork::getMatJ(void) {
 	return currentVector;
 }
 
-Matrix linearResistiveNetwork::getMatE(void){
+Matrix linearResistiveNetwork::getMatE(void) {
 	return voltageVector;
 }
 
-Matrix linearResistiveNetwork::getMatY(void){
+Matrix linearResistiveNetwork::getMatY(void) {
 	return revResistanceMatrix;
 }
 
-Matrix linearResistiveNetwork::getMatA(void){
+Matrix linearResistiveNetwork::getMatA(void) {
 	return redResistanceMatrix;
 }
 
@@ -113,7 +113,7 @@ Matrix linearResistiveNetwork::getMatA(void){
  *	Calculate matrices A and b based on the information above
  *	and solve Ax = b.
  */
-Matrix linearResistiveNetwork::solveCircuit(void){
+Matrix linearResistiveNetwork::solveCircuit(void) {
 	// First calculate A.
 	Matrix A = redResistanceMatrix.dotProduct(
 		revResistanceMatrix.dotProduct(redResistanceMatrix.transpose()));
@@ -131,7 +131,7 @@ Matrix linearResistiveNetwork::solveCircuit(void){
 /**
 	Start of a custom csv parser.
 */
-enum class CSVState{
+enum class CSVState {
 	UnquotedField,
 	QuotedField,
 	QuotedQuote
@@ -191,15 +191,15 @@ vector<std::string> readCSVRow(const std::string &row) {
 
 /// Read CSV file, Excel dialect. Accept "quoted fields ""with quotes"""
 std::vector<std::vector<std::string>> readCSV(std::istream& in) {
-    std::vector<std::vector<std::string>> table;
-    std::string row;
-    while (!in.eof()) {
-        std::getline(in, row);
-        if (in.bad() || in.fail()) {
-            break;
-        }
-        auto fields = readCSVRow(row);
-        table.push_back(fields);
-    }
-    return table;
+	std::vector<std::vector<std::string>> table;
+	std::string row;
+	while (!in.eof()) {
+		std::getline(in, row);
+		if (in.bad() || in.fail()) {
+			break;
+		}
+		auto fields = readCSVRow(row);
+		table.push_back(fields);
+	}
+	return table;
 }
