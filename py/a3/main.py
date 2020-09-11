@@ -6,7 +6,7 @@ from nonlinear import calc_f1, calc_f2, calc_jacobian, calc_norm_vec
 from integration import gauss_legendre_integration, nested_integration, modified_width, modified_width_nested_integration
 
 from math import sin, log, log10
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 import csv, os
 
 
